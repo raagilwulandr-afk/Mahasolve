@@ -182,13 +182,18 @@
                             {{ strtoupper(substr($mahasiswa?->nama ?? 'M', 0, 1)) }}
                         </div>
                         <div>
-                            <h3 class="font-bold text-sm text-slate-900">
-                                {{ $mahasiswa?->nama ?? 'Mahasiswa' }}
+                            <h3 class="font-bold text-sm text-slate-900 line-clamp-1">
+                                {{ Str::limit($requestLayanan?->detail_kebutuhan ?? 'Permintaan Layanan Kampus', 40) }}
                             </h3>
-                            <p class="text-xs text-slate-500">
-                                {{ $requestLayanan?->judul_request ?? 'Permintaan Layanan' }}
-                            </p>
-                            <span class="text-[10px] text-slate-400">
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <span class="text-xs text-slate-500 font-medium">
+                                    {{ $mahasiswa?->nama ?? $mahasiswa?->username ?? 'Mahasiswa' }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase {{ in_array($requestLayanan?->kategori, ['Bimbingan Akademik', 'Tutor', 'Translasi', 'Akademik']) ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-sky-100 text-sky-700 border border-sky-200' }}">
+                                    {{ $requestLayanan?->kategori ?? 'Umum' }}
+                                </span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 block mt-1">
                                 {{ $matching->tanggal_matching?->diffForHumans() ?? 'Baru saja' }}
                             </span>
                         </div>
