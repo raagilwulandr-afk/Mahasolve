@@ -21,9 +21,20 @@ foreach ($directories as $dir) {
     }
 }
 
-// 2. Set environment paths to /tmp
+// 2. Set environment paths & SQLite database in /tmp
 putenv("APP_STORAGE_PATH={$tmpStorage}");
 putenv("VIEW_COMPILED_PATH={$tmpStorage}/framework/views");
+
+$tmpSqlite = '/tmp/database.sqlite';
+if (!file_exists($tmpSqlite) && file_exists(__DIR__ . '/../mahasolve/database/database.sqlite')) {
+    @copy(__DIR__ . '/../mahasolve/database/database.sqlite', $tmpSqlite);
+}
+
+putenv("DB_CONNECTION=sqlite");
+putenv("DB_DATABASE={$tmpSqlite}");
+putenv("SESSION_DRIVER=cookie");
+putenv("CACHE_STORE=array");
+putenv("QUEUE_CONNECTION=sync");
 
 // 3. Register Composer autoloader
 require __DIR__ . '/../mahasolve/vendor/autoload.php';

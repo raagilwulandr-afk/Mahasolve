@@ -31,12 +31,16 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "true",
+    "APP_KEY": "base64:I/KP3ea6LZ1BdwivRnu8pSiY844KzXsu2ZrYeBB6YXk=",
+    "DB_CONNECTION": "sqlite",
+    "DB_DATABASE": "/tmp/database.sqlite",
+    "SESSION_DRIVER": "cookie",
+    "CACHE_STORE": "array",
+    "QUEUE_CONNECTION": "sync",
     "APP_CONFIG_CACHE": "/tmp/storage/bootstrap/cache/config.php",
     "APP_SERVICES_CACHE": "/tmp/storage/bootstrap/cache/services.php",
     "APP_PACKAGES_CACHE": "/tmp/storage/bootstrap/cache/packages.php",
     "APP_ROUTES_CACHE": "/tmp/storage/bootstrap/cache/routes.php",
-    "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
-    "CACHE_DRIVER": "array",
-    "SESSION_DRIVER": "cookie"
+    "VIEW_COMPILED_PATH": "/tmp/storage/framework/views"
   }
 }
