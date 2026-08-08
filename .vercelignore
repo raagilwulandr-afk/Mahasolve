@@ -1,7 +1,7 @@
-# Ignore duplicate provider directory
-provider
-provider/**
-provider/*
+# Ignore duplicate provider directory in root
+/provider
+/provider/**
+/provider/*
 
 # Ignore archives
 mahasolve.zip
