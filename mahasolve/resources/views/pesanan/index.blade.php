@@ -91,7 +91,7 @@
                         <div class="text-right shrink-0">
                             <p class="text-[11px] uppercase tracking-wide text-white/80">Tawaran Terakhir</p>
                             <p class="font-display font-extrabold text-3xl text-white">
-                                Rp{{ number_format(optional($selectedNegosiasi->detailNegosiasi->last())->harga_tawaran ?? 0, 0, ',', '.') }}
+                                Rp{{ number_format($selectedNegosiasi->harga_tawaran ?? 0, 0, ',', '.') }}
                             </p>
                         </div>
                     </div>

@@ -27,7 +27,7 @@ class PesananController extends Controller
         $semuaNegosiasi = Negosiasi::whereHas('request', fn ($q) => $q->where('id_user', $user->id_user))
             ->whereIn('status_negosiasi', ['pending', 'ditawar_ulang'])
             ->whereDoesntHave('pesanan')
-            ->with('provider.user', 'request', 'detailNegosiasi')
+            ->with('provider.user', 'request')
             ->get();
 
         $negosiasiList = $semuaNegosiasi->map(fn ($n) => (object) [
@@ -43,8 +43,8 @@ class PesananController extends Controller
             'tanggal' => $n->created_at,
             'url' => route('pesanan.index', ['negosiasi' => $n->id_negosiasi, 'status' => $filterStatus]),
             'chat_url' => route('negosiasi.show', $n->id_negosiasi),
-            'harga_tawaran' => optional($n->detailNegosiasi->last())->harga_tawaran ?? 0,
-            'pesan_terakhir' => optional($n->detailNegosiasi->last())->detail_negosiasi ?? 'Penawaran sedang didiskusikan',
+            'harga_tawaran' => $n->harga_tawaran ?? 0,
+            'pesan_terakhir' => $n->detail_negosiasi ?? 'Penawaran sedang didiskusikan',
         ]);
 
         $semuaPesanan = Pesanan::whereHas('negosiasi.request', fn ($q) => $q->where('id_user', $user->id_user))
