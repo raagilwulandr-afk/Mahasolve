@@ -205,36 +205,38 @@
                                 </div>
                             </div>
 
-                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-4 rounded-2xl border border-slate-100"
-                                x-text="activeOrder.description"></p>
+                             <!-- PERCAKAPAN NEGO CHAT BOX -->
+                             <div class="border border-slate-200/80 rounded-3xl p-5 space-y-4">
+                                 <h3 class="font-bold text-slate-800 text-sm flex items-center justify-between">
+                                     <span class="flex items-center gap-2 font-display">
+                                         <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                         </svg>
+                                         Percakapan &amp; Log Pengerjaan
+                                     </span>
+                                     <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100">
+                                         Live Chat
+                                     </span>
+                                 </h3>
 
-                            <!-- PERCAKAPAN NEGO CHAT BOX -->
-                            <div class="border border-slate-200/80 rounded-3xl p-5 space-y-4">
-                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                    Percakapan Negosiasi
-                                </h3>
-
-                                <div class="space-y-3 max-h-80 overflow-y-auto p-1">
-                                    <template x-for="chat in activeOrder.chats" :key="chat.id">
-                                        <div :class="chat.sender === 'provider' ? 'flex flex-col items-end' : 'flex flex-col items-start'">
-                                            <div :class="chat.sender === 'provider' ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-none'"
-                                                class="p-3.5 max-w-sm text-xs leading-relaxed shadow-sm">
-                                                <p x-text="chat.message"></p>
-                                                <template x-if="chat.offeredPrice">
-                                                    <div class="mt-2 pt-2 border-t text-[11px] font-bold flex justify-between gap-4"
-                                                        :class="chat.sender === 'provider' ? 'border-white/20 text-amber-200' : 'border-slate-200 text-indigo-600'">
-                                                        <span>Pengajuan Harga:</span>
-                                                        <span x-text="'Rp' + formatNumber(chat.offeredPrice)"></span>
-                                                    </div>
-                                                </template>
-                                            </div>
-                                            <span class="text-[10px] text-slate-400 mt-1 px-1" x-text="chat.time"></span>
-                                        </div>
-                                    </template>
-                                </div>
+                                 <div class="space-y-3 max-h-80 overflow-y-auto p-1">
+                                     <template x-for="chat in activeOrder.chats" :key="chat.id">
+                                         <div :class="chat.sender === 'provider' ? 'flex flex-col items-end' : 'flex flex-col items-start'">
+                                             <div :class="chat.sender === 'provider' ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-none'"
+                                                 class="p-3.5 max-w-sm text-xs leading-relaxed shadow-sm">
+                                                 <p x-text="chat.message"></p>
+                                                 <template x-if="chat.offeredPrice">
+                                                     <div class="mt-2 pt-2 border-t text-[11px] font-bold flex justify-between gap-4"
+                                                         :class="chat.sender === 'provider' ? 'border-white/20 text-amber-200' : 'border-slate-200 text-indigo-600'">
+                                                         <span>Pengajuan Harga:</span>
+                                                         <span x-text="'Rp' + formatNumber(chat.offeredPrice)"></span>
+                                                     </div>
+                                                 </template>
+                                             </div>
+                                             <span class="text-[10px] text-slate-400 mt-1 px-1" x-text="chat.time"></span>
+                                         </div>
+                                     </template>
+                                 </div>
 
                                  <!-- QUICK INLINE NEGO PRICE COUNTER-OFFER FORM (Nego Langsung In-Chat) -->
                                 <template x-if="activeOrder.status === 'Negosiasi'">
@@ -265,6 +267,62 @@
                                             </button>
                                         </div>
                                     </form>
+                                </template>
+
+                                <!-- INLINE DELIVERABLE & PROGRESS SUBMISSION FORM INSIDE CHAT BOX -->
+                                <template x-if="activeOrder.status !== 'Negosiasi' && activeOrder.status !== 'Ditolak' && activeOrder.status !== 'Dibatalkan'">
+                                    <div x-data="{ openDeliverableForm: false }" class="pt-2 border-t border-slate-100">
+                                        <div class="flex items-center justify-between p-3 bg-indigo-50/80 border border-indigo-100 rounded-2xl">
+                                            <span class="text-xs font-bold text-indigo-900 flex items-center gap-2 font-display">
+                                                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                                </svg>
+                                                Update Progress &amp; Upload Deliverable
+                                            </span>
+                                            <button type="button" @click="openDeliverableForm = !openDeliverableForm"
+                                                class="text-xs font-bold text-indigo-700 bg-white hover:bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-200 shadow-2xs transition cursor-pointer flex items-center gap-1.5">
+                                                <span>📎</span>
+                                                <span x-text="openDeliverableForm ? 'Tutup Panel Upload ▲' : 'Open Upload Berkas ▼'"></span>
+                                            </button>
+                                        </div>
+
+                                        <form x-show="openDeliverableForm" x-transition :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/progress'" method="POST" enctype="multipart/form-data" class="mt-3 bg-white border border-indigo-100 rounded-2xl p-4 space-y-3 shadow-xs">
+                                            @csrf
+                                            <div>
+                                                <label class="block text-xs font-semibold text-slate-700 mb-1">Status Pengerjaan</label>
+                                                <select name="status_pengerjaan" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-indigo-500">
+                                                    <option value="dikerjakan">Sedang Diproses / Dikerjakan</option>
+                                                    <option value="revisi">Revisi Pengerjaan</option>
+                                                    <option value="selesai">Pengerjaan Selesai (Submit Final Deliverable)</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-xs font-semibold text-slate-700 mb-1">Pesan Progress / Catatan Hasil</label>
+                                                <input type="text" name="pesan_progress" required placeholder="Contoh: Draf pengerjaan 100% selesai, silakan cek berkas terlampir."
+                                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-indigo-500">
+                                            </div>
+
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                <div>
+                                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Upload File Berkas (.pdf, .zip, .docx)</label>
+                                                    <input type="file" name="file_dokumen" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Link Google Drive / Dropbox</label>
+                                                    <input type="url" name="link_drive" placeholder="https://drive.google.com/file/d/..."
+                                                        class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-indigo-500">
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                                Simpan Progress &amp; Submit Deliverable
+                                            </button>
+                                        </form>
+                                    </div>
                                 </template>
 
                                 <!-- FORM BALAS CHAT STANDARD (Selalu aktif selama pesanan berjalan / tidak dibatalkan) -->
@@ -315,61 +373,15 @@
                                 </div>
                             </template>
 
-                            <!-- STATUS FINAL BANNER & PROGRESS / DELIVERABLE UPLOAD FORM -->
-                            <template x-if="activeOrder.status !== 'Negosiasi'">
-                                <div class="space-y-4">
-                                    <div class="p-4 rounded-2xl text-xs font-semibold text-center"
-                                        :class="{
-                                            'bg-emerald-50 text-emerald-700 border border-emerald-200': activeOrder.status === 'Diproses' || activeOrder.status === 'Selesai' || activeOrder.status === 'Menunggu_pengerjaan',
-                                            'bg-rose-50 text-rose-700 border border-rose-200': activeOrder.status === 'Ditolak'
-                                        }">
-                                        <span x-text="'Status Pesanan: ' + activeOrder.status"></span>
-                                    </div>
-
-                                    <template x-if="activeOrder.status !== 'Ditolak'">
-                                        <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/progress'" method="POST" enctype="multipart/form-data" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
-                                            @csrf
-                                            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
-                                                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                                </svg>
-                                                Update Progress &amp; Kirim Deliverable
-                                            </h4>
-
-                                            <div>
-                                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Status Pengerjaan</label>
-                                                <select name="status_pesanan" required class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
-                                                    <option value="diproses">Sedang Diproses / Dikerjakan</option>
-                                                    <option value="selesai">Selesai &amp; Deliverable Siap</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pesan Progress / Catatan</label>
-                                                <input type="text" name="pesan_progress" placeholder="Contoh: Draf awal pengerjaan telah selesai 50%..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
-                                            </div>
-
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                <div>
-                                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Upload File Berkas (.pdf, .zip, .docx)</label>
-                                                    <input type="file" name="file_dokumen" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-600 focus:outline-none focus:border-indigo-500">
-                                                </div>
-                                                <div>
-                                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Link Google Drive / Dropbox</label>
-                                                    <input type="text" name="dokumen" placeholder="https://drive.google.com/file/d/..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
-                                                </div>
-                                            </div>
-
-                                            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer">
-                                                Simpan Progress &amp; Submit Deliverable
-                                            </button>
-                                        </form>
-
-                                        <div class="pt-1">
-                                            <button type="button" @click="showCancelModal = true" class="w-full py-2.5 px-4 border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                                <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                                Batalkan Pesanan (Emergency)
-                                            </button>
+                            <!-- EMERGENCY CANCEL BUTTON FOR ACTIVE ORDERS -->
+                            <template x-if="activeOrder.status !== 'Negosiasi' && activeOrder.status !== 'Ditolak' && activeOrder.status !== 'Dibatalkan'">
+                                <div class="pt-2">
+                                    <button type="button" @click="showCancelModal = true" class="w-full py-2.5 px-4 border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                        <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                        Batalkan Pesanan (Emergency)
+                                    </button>
+                                </div>
+                            </template>
                                         </div>
                                     </template>
                                 </div>
