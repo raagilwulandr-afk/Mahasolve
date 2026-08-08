@@ -1,31 +1,23 @@
-# Ignore entire provider directory and duplicate projects
+# Ignore duplicate provider directory
 provider
 provider/**
 provider/*
 
-# Ignore all zip files and archives
+# Ignore archives
 mahasolve.zip
 *.zip
 **/*.zip
 
-# Ignore all node_modules everywhere
+# Ignore node_modules (only needed for frontend build step, not PHP lambda runtime)
 node_modules
 node_modules/**
 **/node_modules/**
 mahasolve/node_modules/**
 
-# Ignore dev-only vendor dependencies & heavy binaries to keep lambda bundle lightweight (<15MB)
+# Ignore heavy dev-only standalone binary (15.8MB)
 mahasolve/vendor/laravel/pint/**
-mahasolve/vendor/fakerphp/**
-mahasolve/vendor/phpunit/**
-mahasolve/vendor/mockery/**
-mahasolve/vendor/psy/**
-mahasolve/vendor/phar-io/**
-mahasolve/vendor/sebastian/**
-mahasolve/vendor/theseer/**
-mahasolve/vendor/myclabs/**
 
-# Ignore dev logs, cache, tests, git
+# Ignore logs, cache, tests, git
 *.log
 **/*.log
 mahasolve/storage/logs/**
