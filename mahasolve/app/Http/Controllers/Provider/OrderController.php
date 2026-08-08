@@ -43,11 +43,33 @@ class OrderController extends Controller
             }
         }
 
-        // Ambil semua negosiasi/order milik Provider ini
-        $negosiasiList = Negosiasi::with(['request.mahasiswa', 'pesanan.trackingPesanan', 'pesanan.detailPekerjaan'])
-            ->where('id_provider', $provider->id_provider)
-            ->latest()
-            ->get();
+        // Ambil negosiasi unik (thread per id_request) milik Provider ini
+        $requestIds = Negosiasi::where('id_provider', $provider->id_provider)
+            ->pluck('id_request')
+            ->unique();
+
+        $negosiasiList = collect();
+        foreach ($requestIds as $reqId) {
+            // Utamakan baris negosiasi yang sudah memiliki relasi pesanan
+            $negoItem = Negosiasi::with(['request.mahasiswa', 'pesanan.trackingPesanan', 'pesanan.detailPekerjaan'])
+                ->where('id_provider', $provider->id_provider)
+                ->where('id_request', $reqId)
+                ->whereHas('pesanan')
+                ->latest()
+                ->first();
+
+            if (!$negoItem) {
+                $negoItem = Negosiasi::with(['request.mahasiswa', 'pesanan.trackingPesanan', 'pesanan.detailPekerjaan'])
+                    ->where('id_provider', $provider->id_provider)
+                    ->where('id_request', $reqId)
+                    ->latest()
+                    ->first();
+            }
+
+            if ($negoItem) {
+                $negosiasiList->push($negoItem);
+            }
+        }
 
         // Map ke format dummy/order view agar compatible dengan view provider.order
         $orders = $negosiasiList->map(function ($nego) use ($user) {
