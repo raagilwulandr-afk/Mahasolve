@@ -230,7 +230,11 @@
                             <div @click.away="showQrisModal = false" class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-5 text-center">
                                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                                     <img src="{{ asset('images/qris-logo.png') }}" alt="Official QRIS Logo" class="h-9 object-contain">
-                                    <button type="button" @click="showQrisModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-sm cursor-pointer px-2">✕</button>
+                                     <button type="button" @click="showQrisModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-100 transition">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                         </svg>
+                                     </button>
                                 </div>
 
                                 <div class="space-y-1">

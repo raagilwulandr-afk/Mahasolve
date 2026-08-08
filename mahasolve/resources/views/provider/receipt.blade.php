@@ -62,7 +62,9 @@
             type="button"
             class="no-print absolute top-5 right-5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition"
         >
-            ✕
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
         </button>
 
         <!-- AREA KONTEN STRUK (Area Ini yang Akan Dicetak) -->
@@ -71,7 +73,9 @@
             <!-- Notifikasi Pembayaran Berhasil -->
             <div class="no-print mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm flex items-start gap-3">
                 <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
-                    ✓
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                    </svg>
                 </div>
                 <div>
                     <h2 class="text-sm font-bold text-emerald-700">Pembayaran Berhasil</h2>

@@ -53,7 +53,11 @@
                                 <h3 class="font-display font-extrabold text-base text-slate-900">Penarikan Saldo Pendapatan</h3>
                                 <p class="text-xs text-slate-500 mt-0.5">Transfer saldo pendapatan mitra ke E-Wallet atau Rekening Bank.</p>
                             </div>
-                            <button type="button" @click="showWithdrawModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-sm cursor-pointer px-2">✕</button>
+                            <button type="button" @click="showWithdrawModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-100 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
                         </div>
 
                         <form method="POST" action="{{ route('provider.withdraw') }}" class="space-y-4">

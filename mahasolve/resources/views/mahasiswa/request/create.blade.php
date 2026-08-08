@@ -50,7 +50,11 @@
                     <p class="text-xs font-semibold text-rose-700 mt-0.5" x-text="alertMessage"></p>
                 </div>
             </div>
-            <button type="button" @click="alertMessage = ''" class="text-rose-400 hover:text-rose-600 font-bold text-xs cursor-pointer px-2">✕</button>
+            <button type="button" @click="alertMessage = ''" class="text-rose-400 hover:text-rose-600 cursor-pointer p-1 rounded-lg hover:bg-rose-100 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
 
         @if (isset($selectedProvider) && $selectedProvider)
