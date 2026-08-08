@@ -65,13 +65,16 @@
                         <p class="text-sm text-[#6B6F85]">Metode Pembayaran</p>
                         <p class="font-semibold mt-1">{{ $pesanan->pembayaran->metode_pembayaran ?? '-' }}</p>
                         @if ($pesanan->pembayaran)
+                            @php
+                                $statusBayarVal = is_object($pesanan->pembayaran->status_bayar) ? $pesanan->pembayaran->status_bayar->value : (string) $pesanan->pembayaran->status_bayar;
+                            @endphp
                             <span @class([
                                 'inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium',
-                                'bg-green-100 text-green-700' => $pesanan->pembayaran->status_bayar === 'dikonfirmasi',
-                                'bg-yellow-100 text-yellow-700' => $pesanan->pembayaran->status_bayar === 'menunggu_konfirmasi',
-                                'bg-red-100 text-red-700' => $pesanan->pembayaran->status_bayar === 'ditolak',
+                                'bg-green-100 text-green-700' => $statusBayarVal === 'dikonfirmasi',
+                                'bg-yellow-100 text-yellow-700' => $statusBayarVal === 'menunggu_konfirmasi',
+                                'bg-red-100 text-red-700' => $statusBayarVal === 'ditolak',
                             ])>
-                                {{ ucfirst(str_replace('_',' ', $pesanan->pembayaran->status_bayar)) }}
+                                {{ ucfirst(str_replace('_',' ', $statusBayarVal)) }}
                             </span>
                         @endif
                     </div>

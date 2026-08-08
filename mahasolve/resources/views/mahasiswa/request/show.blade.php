@@ -9,14 +9,17 @@
                 <h1 class="text-lg font-bold text-gray-800">{{ $requestLayanan->kategori }}</h1>
                 <p class="text-sm text-gray-500 mt-1">{{ $requestLayanan->detail_kebutuhan }}</p>
             </div>
+            @php
+                $statusVal = is_object($requestLayanan->status_request) ? $requestLayanan->status_request->value : (string) $requestLayanan->status_request;
+            @endphp
             <span @class([
                 'text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap',
-                'bg-blue-100 text-blue-700' => $requestLayanan->status_request === 'open',
-                'bg-yellow-100 text-yellow-700' => $requestLayanan->status_request === 'diproses',
-                'bg-green-100 text-green-700' => $requestLayanan->status_request === 'selesai',
-                'bg-gray-100 text-gray-500' => $requestLayanan->status_request === 'dibatalkan',
+                'bg-blue-100 text-blue-700' => $statusVal === 'open',
+                'bg-yellow-100 text-yellow-700' => $statusVal === 'diproses',
+                'bg-green-100 text-green-700' => $statusVal === 'selesai',
+                'bg-gray-100 text-gray-500' => $statusVal === 'dibatalkan',
             ])>
-                {{ ucfirst($requestLayanan->status_request) }}
+                {{ is_object($requestLayanan->status_request) && method_exists($requestLayanan->status_request, 'label') ? $requestLayanan->status_request->label() : ucfirst($statusVal) }}
             </span>
         </div>
 
@@ -35,7 +38,7 @@
             </div>
         </dl>
 
-        @if ($requestLayanan->status_request === 'open')
+        @if ($statusVal === 'open')
             <div class="mt-4 flex gap-3">
                 <a href="{{ route('catalog.index') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700">
                     Cari Provider untuk Request Ini

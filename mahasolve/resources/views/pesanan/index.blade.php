@@ -251,7 +251,7 @@
                                 </form>
                             @elseif ($selected->pembayaran)
                                 <p class="text-sm text-[#6B6F85]">
-                                    Status pembayaran: <span class="font-semibold text-[#16182B]">{{ ucfirst(str_replace('_',' ', $selected->pembayaran->status_bayar)) }}</span>
+                                    Status pembayaran: <span class="font-semibold text-[#16182B]">{{ ucfirst(str_replace('_',' ', is_object($selected->pembayaran->status_bayar) ? $selected->pembayaran->status_bayar->value : (string)$selected->pembayaran->status_bayar)) }}</span>
                                 </p>
                                 <a href="{{ route('pesanan.struk', $selected->id_pesanan) }}" target="_blank"
                                    class="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full text-sm font-medium border border-[#14162B14] bg-[#F7F8FC] hover:bg-white transition">
