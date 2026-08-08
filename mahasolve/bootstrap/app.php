@@ -1,7 +1,27 @@
 <?php
 
-ini_set('session.save_path', '/tmp/storage/framework/sessions');
-ini_set('upload_tmp_dir', '/tmp/storage');
+if (is_dir('/tmp')) {
+    $dirs = [
+        '/tmp/storage',
+        '/tmp/storage/framework',
+        '/tmp/storage/framework/views',
+        '/tmp/storage/framework/sessions',
+        '/tmp/storage/framework/cache',
+        '/tmp/storage/framework/cache/data',
+        '/tmp/storage/logs',
+        '/tmp/bootstrap',
+        '/tmp/bootstrap/cache',
+    ];
+
+    foreach ($dirs as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+    }
+
+    ini_set('session.save_path', '/tmp/storage/framework/sessions');
+    ini_set('upload_tmp_dir', '/tmp/storage');
+}
 
 set_error_handler(function ($errno, $errstr) {
     if (str_contains($errstr, 'tempnam')) {
@@ -42,24 +62,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })->create();
 
 if (is_dir('/tmp')) {
-    $dirs = [
-        '/tmp/storage',
-        '/tmp/storage/framework',
-        '/tmp/storage/framework/views',
-        '/tmp/storage/framework/sessions',
-        '/tmp/storage/framework/cache',
-        '/tmp/storage/framework/cache/data',
-        '/tmp/storage/logs',
-        '/tmp/bootstrap',
-        '/tmp/bootstrap/cache',
-    ];
-
-    foreach ($dirs as $dir) {
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0777, true);
-        }
-    }
-
     $app->useStoragePath('/tmp/storage');
 }
 
