@@ -142,8 +142,14 @@
                                 {{ strtoupper(substr($selected->negosiasi->provider->user->username, 0, 1)) }}
                             </span>
                             <div>
-                                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase text-white" style="background:rgba(255,255,255,0.2);">
-                                    Status · {{ $selected->status_pesanan === 'selesai' ? 'Selesai' : ($selected->status_pesanan === 'dibatalkan' ? 'Dibatalkan' : 'Diproses') }}
+                                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase text-white" style="background:rgba(255,255,255,0.25);">
+                                    Status · {{ match($selected->status_pesanan) {
+                                        'selesai' => 'Selesai',
+                                        'dibatalkan' => 'Dibatalkan',
+                                        'dikerjakan', 'revisi', 'diproses' => 'Diproses / Dikerjakan',
+                                        'menunggu_pengerjaan' => 'Dikonfirmasi (Menunggu Pengerjaan)',
+                                        default => 'Diproses'
+                                    } }}
                                 </span>
                                 <h2 class="font-display font-bold text-xl text-white mt-1">{{ Str::limit($selected->negosiasi->request->detail_kebutuhan, 40) }}</h2>
                                 <p class="text-sm text-white/80 mt-0.5">{{ $selected->negosiasi->provider->user->username }} · {{ $selected->negosiasi->request->kategori }}</p>
