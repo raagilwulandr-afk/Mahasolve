@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.7.2"
+    }
+  },
+  "routes": [
+    {
+      "src": "/build/(.*)",
+      "dest": "/mahasolve/public/build/$1"
+    },
+    {
+      "src": "/(css|js|images|storage)/(.*)",
+      "dest": "/mahasolve/public/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/mahasolve/public/favicon.ico"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/mahasolve/public/robots.txt"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
+  ]
+}
