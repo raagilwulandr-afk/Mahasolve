@@ -1,0 +1,20 @@
+# Exclude heavy archives and non-runtime directories from serverless function bundle
+mahasolve.zip
+*.zip
+provider/
+
+# Exclude node_modules (needed for build step, not for PHP lambda runtime)
+node_modules
+mahasolve/node_modules
+
+# Exclude logs and cache
+*.log
+mahasolve/storage/logs/
+mahasolve/storage/framework/cache/
+mahasolve/storage/framework/sessions/
+mahasolve/storage/framework/views/
+
+# Exclude development files
+.git
+.github
+mahasolve/tests
