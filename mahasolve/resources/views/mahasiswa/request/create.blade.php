@@ -72,12 +72,12 @@
         <div>
             <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Layanan</label>
             <select name="kategori" x-model="currentKat" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white transition">
-                <option value="Antar Jemput">🛵 Antar Jemput</option>
-                <option value="Print & Fotokopi">🖨️ Print &amp; Fotokopi</option>
-                <option value="Bimbingan">🎓 Bimbingan &amp; Tutor</option>
-                <option value="Desain & Editing">🎨 Desain &amp; Editing</option>
-                <option value="Titip Makan">🍱 Titip Makan</option>
-                <option value="Titip Beli">🛍️ Titip Beli</option>
+                <option value="Antar Jemput">Antar Jemput</option>
+                <option value="Print & Fotokopi">Print &amp; Fotokopi</option>
+                <option value="Bimbingan">Bimbingan &amp; Tutor</option>
+                <option value="Desain & Editing">Desain &amp; Editing</option>
+                <option value="Titip Makan">Titip Makan</option>
+                <option value="Titip Beli">Titip Beli</option>
             </select>
         </div>
 

@@ -15,12 +15,12 @@
                 <button type="button" @click="selectedRole = 'mahasiswa'"
                         :class="selectedRole === 'mahasiswa' ? 'bg-white text-indigo-600 font-bold shadow-sm' : 'text-slate-500 font-medium hover:text-slate-800'"
                         class="py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
-                    🎓 Mahasiswa
+                    Mahasiswa
                 </button>
                 <button type="button" @click="selectedRole = 'provider'"
                         :class="selectedRole === 'provider' ? 'bg-white text-indigo-600 font-bold shadow-sm' : 'text-slate-500 font-medium hover:text-slate-800'"
                         class="py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
-                    💼 Penyedia Jasa
+                    Penyedia Jasa
                 </button>
             </div>
             <p class="text-[11px] text-slate-400 mt-1.5 text-center" x-text="selectedRole === 'mahasiswa' ? 'Daftar untuk memesan layanan antar jemput, bimbingan, atau print.' : 'Daftar sebagai mitra provider untuk menawarkan jasa kamu ke mahasiswa Unikom.'"></p>
@@ -72,7 +72,7 @@
         </div>
 
         <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/20 transition transform active:scale-95">
-            Daftar Sekarang ✨
+            Daftar Sekarang
         </button>
 
         <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">

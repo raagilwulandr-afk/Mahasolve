@@ -81,7 +81,9 @@
                     @csrf
                     <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
                         <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-                            📤
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                            </svg>
                         </div>
                         <div>
                             <h3 class="font-display font-bold text-sm text-slate-900">Upload Berkas &amp; Instruksi Pekerjaan</h3>

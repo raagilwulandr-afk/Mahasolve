@@ -22,7 +22,7 @@
         </div>
 
         <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/20 transition transform active:scale-95">
-            Kirim Tautan Reset Password ✉️
+            Kirim Tautan Reset Password
         </button>
 
         <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">

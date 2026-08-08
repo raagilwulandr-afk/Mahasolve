@@ -64,8 +64,10 @@
         <!-- GRID ORDER & NEGO LAYOUT -->
         <template x-if="orders.length === 0">
             <div class="bg-white rounded-3xl border border-slate-200/80 p-12 text-center space-y-5 shadow-sm">
-                <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto text-3xl font-bold shadow-inner">
-                    📥
+                <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
+                    <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                    </svg>
                 </div>
                 <div class="space-y-1">
                     <h3 class="font-bold text-slate-900 text-lg font-display">Belum Ada Order Masuk</h3>
@@ -303,8 +305,10 @@
 
                 <template x-if="!activeOrder">
                     <div class="p-12 sm:p-16 text-center space-y-4">
-                        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
-                            📋
+                        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2H9m12 0a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
                         </div>
                         <div class="space-y-1">
                             <h3 class="font-bold text-slate-800 text-base font-display">Belum Ada Order Aktif</h3>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <rect width="240" height="60" rx="14" fill="#EE4D2D"/>
+  <path d="M30 18c-5 0-8 4-8 9v15h6V27c0-2 2-3 4-3h6c2 0 4 1 4 3v15h6V27c0-5-3-9-8-9h-10z" fill="#FFFFFF"/>
+  <text x="62" y="39" font-family="Montserrat, Inter, sans-serif" font-weight="900" font-size="22" fill="#FFFFFF">ShopeePay</text>
+</svg>

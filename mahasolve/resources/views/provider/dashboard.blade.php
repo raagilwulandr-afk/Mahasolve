@@ -61,13 +61,21 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Tujuan Pencairan (E-Wallet / Bank)</label>
                                 <select name="metode" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
-                                    <option value="GoPay">🛵 GoPay</option>
-                                    <option value="OVO">💜 OVO</option>
-                                    <option value="DANA">💙 DANA</option>
-                                    <option value="ShopeePay">🟠 ShopeePay</option>
-                                    <option value="Bank BCA">🏦 Bank BCA</option>
-                                    <option value="Bank Mandiri">🏦 Bank Mandiri</option>
+                                    <option value="GoPay">GoPay</option>
+                                    <option value="OVO">OVO</option>
+                                    <option value="DANA">DANA</option>
+                                    <option value="ShopeePay">ShopeePay</option>
+                                    <option value="Bank BCA">Bank BCA</option>
+                                    <option value="Bank Mandiri">Bank Mandiri</option>
                                 </select>
+                                <div class="flex items-center justify-center gap-2 pt-2.5">
+                                    <img src="{{ asset('images/gopay.svg') }}" alt="GoPay" class="h-4 object-contain opacity-80 hover:opacity-100 transition">
+                                    <img src="{{ asset('images/ovo.svg') }}" alt="OVO" class="h-4 object-contain opacity-80 hover:opacity-100 transition">
+                                    <img src="{{ asset('images/dana.svg') }}" alt="DANA" class="h-4 object-contain opacity-80 hover:opacity-100 transition">
+                                    <img src="{{ asset('images/shopeepay.svg') }}" alt="ShopeePay" class="h-4 object-contain opacity-80 hover:opacity-100 transition">
+                                    <img src="{{ asset('images/bca.svg') }}" alt="BCA" class="h-4 object-contain opacity-80 hover:opacity-100 transition">
+                                    <img src="{{ asset('images/mandiri.svg') }}" alt="Mandiri" class="h-4 object-contain opacity-80 hover:opacity-100 transition">
+                                </div>
                             </div>
 
                             <div>
@@ -289,8 +297,10 @@
             </div>
             @else
             <div class="rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center space-y-2">
-                <div class="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mx-auto text-xl">
-                    📦
+                <div class="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
+                    <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
                 </div>
                 <p class="font-semibold text-xs text-slate-700">Belum Ada Layanan Aktif</p>
                 <p class="text-[11px] text-slate-400 max-w-xs mx-auto">Pesanan yang disepakati dan sedang dikerjakan akan muncul di sini.</p>
