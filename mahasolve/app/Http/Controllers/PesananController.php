@@ -121,9 +121,9 @@ class PesananController extends Controller
         if ($selected) {
             if ($selected->status_pesanan === 'selesai') {
                 $stepIndex = 3;
-            } elseif (in_array($selected->status_pesanan, ['dikerjakan', 'revisi'])) {
+            } elseif (in_array($selected->status_pesanan, ['dikerjakan', 'revisi', 'diproses'])) {
                 $stepIndex = 2;
-            } elseif ($selected->pembayaran && $selected->pembayaran->status_bayar === 'dikonfirmasi') {
+            } elseif ($selected->status_pesanan === 'menunggu_pengerjaan' || ($selected->pembayaran && $selected->pembayaran->status_bayar === 'dikonfirmasi')) {
                 $stepIndex = 1;
             } else {
                 $stepIndex = 0;
@@ -133,8 +133,17 @@ class PesananController extends Controller
         return view('pesanan.index', compact('daftarAktivitas', 'selected', 'selectedNegosiasi', 'selectedId', 'selectedNegosiasiId', 'stepIndex', 'filterStatus'));
     }
 
-    public function show(Pesanan $pesanan)
+    public function show($id)
     {
+        $pesanan = Pesanan::find($id);
+        if (!$pesanan) {
+            $pesanan = Pesanan::where('id_negosiasi', $id)->first() ?? Pesanan::latest()->first();
+        }
+
+        if (!$pesanan) {
+            return redirect()->route('pesanan.index')->with('error', 'Pesanan tidak ditemukan.');
+        }
+
         $this->authorizeParticipant($pesanan);
 
         $pesanan->load(
@@ -150,8 +159,12 @@ class PesananController extends Controller
     }
 
     // Struk sederhana (bisa diprint) untuk pesanan yang sudah selesai
-    public function struk(Pesanan $pesanan)
+    public function struk($id)
     {
+        $pesanan = Pesanan::find($id) ?? Pesanan::where('id_negosiasi', $id)->first();
+        if (!$pesanan) {
+            return redirect()->route('pesanan.index');
+        }
         $this->authorizeParticipant($pesanan);
         $pesanan->load('negosiasi.request', 'negosiasi.provider.user', 'pembayaran');
 
