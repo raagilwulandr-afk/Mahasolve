@@ -80,7 +80,19 @@
                                 </div>
 
                                 @if ($milikMahasiswa)
-                                    <p class="text-xs text-[#6B6F85] mt-3">Menunggu respon provider...</p>
+                                    <div class="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-100">
+                                        <p class="text-xs text-[#6B6F85]">Menunggu respon provider...</p>
+                                        <form method="POST" action="{{ route('negosiasi.reject', $negosiasi->id_negosiasi) }}"
+                                              onsubmit="return confirm('Tolak & batalkan negosiasi ini?')">
+                                            @csrf
+                                            <button class="px-3.5 py-1.5 rounded-full text-xs font-bold text-rose-600 border border-rose-200 bg-rose-50 hover:bg-rose-100 transition cursor-pointer flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                                Tolak Negosiasi
+                                            </button>
+                                        </form>
+                                    </div>
                                 @else
                                     <div class="flex gap-2 mt-3">
                                         <form method="POST" action="{{ route('negosiasi.accept', $negosiasi->id_negosiasi) }}" class="flex-1">

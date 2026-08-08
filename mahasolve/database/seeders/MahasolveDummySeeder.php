@@ -68,6 +68,8 @@ class MahasolveDummySeeder extends Seeder
         $req3 = RequestLayanan::create(['id_user' => $fajar->id_user, 'detail_kebutuhan' => 'Print + jilid laporan KP 3x', 'kategori' => 'Print & Fotokopi', 'harga_awal' => 27000, 'deadline' => '2026-07-22', 'tanggal_request' => '2026-07-21 09:00:00', 'status_request' => 'selesai', 'kriteria_output' => 'Jilid lakban, 3 rangkap']);
         $req4 = RequestLayanan::create(['id_user' => $raka->id_user, 'detail_kebutuhan' => 'Titip makan siang kantin TC', 'kategori' => 'Titip Makan', 'harga_awal' => 22000, 'deadline' => '2026-07-21', 'tanggal_request' => '2026-07-21 11:00:00', 'status_request' => 'selesai', 'kriteria_output' => 'Nasi + ayam, jangan pedas']);
         $req5 = RequestLayanan::create(['id_user' => $dinda->id_user, 'detail_kebutuhan' => 'Bimbingan Struktur Data 2 jam', 'kategori' => 'Bimbingan', 'harga_awal' => 70000, 'deadline' => '2026-07-18', 'tanggal_request' => '2026-07-17 15:00:00', 'status_request' => 'selesai', 'kriteria_output' => 'Fokus materi linked list & tree']);
+        $req6 = RequestLayanan::create(['id_user' => $raka->id_user, 'detail_kebutuhan' => 'Desain Poster Seminar Event Kampus', 'kategori' => 'Desain & Editing', 'harga_awal' => 50000, 'deadline' => '2026-08-10', 'tanggal_request' => '2026-08-01 10:00:00', 'status_request' => 'diproses', 'kriteria_output' => 'Poster A3, format PNG & PDF high res']);
+        $req7 = RequestLayanan::create(['id_user' => $raka->id_user, 'detail_kebutuhan' => 'Edit Video Tugas Multimedia 5 Menit', 'kategori' => 'Desain & Editing', 'harga_awal' => 60000, 'deadline' => '2026-08-05', 'tanggal_request' => '2026-08-02 14:00:00', 'status_request' => 'open', 'kriteria_output' => 'Format MP4 1080p, transisi smooth']);
 
         // ================= DT6: negosiasi =================
         $neg1 = Negosiasi::create(['id_request' => $req1->id_request, 'id_provider' => $pRizky->id_provider, 'harga_tawaran' => 8000, 'detail_negosiasi' => 'Deal langsung sesuai harga layanan.', 'dibuat_oleh' => 'mahasiswa', 'status_negosiasi' => 'disepakati', 'created_at' => '2026-07-29 08:05:00']);
@@ -79,18 +81,23 @@ class MahasolveDummySeeder extends Seeder
         Negosiasi::create(['id_request' => $req2->id_request, 'id_provider' => $pAlya->id_provider, 'harga_tawaran' => 50000, 'detail_negosiasi' => 'Untuk 20 slide dengan revisi 2x, biasanya Rp50.000 kak.', 'dibuat_oleh' => 'provider', 'status_negosiasi' => 'ditawar_ulang', 'created_at' => '2026-07-28 09:43:00']);
         Negosiasi::create(['id_request' => $req2->id_request, 'id_provider' => $pAlya->id_provider, 'harga_tawaran' => 45000, 'detail_negosiasi' => 'Lusa sore bisa? Kalau Rp45.000 gimana kak? 🙏', 'dibuat_oleh' => 'mahasiswa', 'status_negosiasi' => 'ditawar_ulang', 'created_at' => '2026-07-28 09:44:00']);
         $neg2 = Negosiasi::create(['id_request' => $req2->id_request, 'id_provider' => $pAlya->id_provider, 'harga_tawaran' => 45000, 'detail_negosiasi' => 'Boleh, Rp45.000 deal untuk 20 slide + revisi 2x. Saya mulai besok ya kak.', 'dibuat_oleh' => 'provider', 'status_negosiasi' => 'pending', 'created_at' => '2026-07-28 09:45:00']);
-        // neg2 sengaja masih 'pending' & belum jadi pesanan -> di halaman chat tampil sebagai kartu "Penawaran Harga" menunggu keputusan mahasiswa
 
         $neg3 = Negosiasi::create(['id_request' => $req3->id_request, 'id_provider' => $pBudi->id_provider, 'harga_tawaran' => 27000, 'detail_negosiasi' => 'Deal sesuai harga layanan.', 'dibuat_oleh' => 'mahasiswa', 'status_negosiasi' => 'disepakati', 'created_at' => '2026-07-21 09:05:00']);
         $neg4 = Negosiasi::create(['id_request' => $req4->id_request, 'id_provider' => $pDewi->id_provider, 'harga_tawaran' => 22000, 'detail_negosiasi' => 'Termasuk harga makanan + ongkos titip.', 'dibuat_oleh' => 'mahasiswa', 'status_negosiasi' => 'disepakati', 'created_at' => '2026-07-21 11:05:00']);
         $neg5 = Negosiasi::create(['id_request' => $req5->id_request, 'id_provider' => $pAndi->id_provider, 'harga_tawaran' => 70000, 'detail_negosiasi' => 'Deal sesuai harga layanan.', 'dibuat_oleh' => 'mahasiswa', 'status_negosiasi' => 'disepakati', 'created_at' => '2026-07-17 15:05:00']);
+
+        // Negosiasi aktif Raka <-> Siti Desain
+        Negosiasi::create(['id_request' => $req6->id_request, 'id_provider' => $pSiti->id_provider, 'harga_tawaran' => 50000, 'detail_negosiasi' => 'Halo kak, saya ingin pesan poster seminar kampus untuk tanggal 10. Apakah harga Rp50.000 sudah termasuk revisi?', 'dibuat_oleh' => 'mahasiswa', 'status_negosiasi' => 'ditawar_ulang', 'created_at' => '2026-08-01 10:05:00']);
+        $neg6 = Negosiasi::create(['id_request' => $req6->id_request, 'id_provider' => $pSiti->id_provider, 'harga_tawaran' => 45000, 'detail_negosiasi' => 'Sudah kak, harga khusus mahasiswa Rp45.000 sudah termasuk 2x revisi mayor.', 'dibuat_oleh' => 'provider', 'status_negosiasi' => 'pending', 'created_at' => '2026-08-01 10:10:00']);
+
+        // Negosiasi ditolak / dibatalkan Raka <-> Wulan Edit
+        $neg7 = Negosiasi::create(['id_request' => $req7->id_request, 'id_provider' => $pWulan->id_provider, 'harga_tawaran' => 60000, 'detail_negosiasi' => 'Maaf kak, jadwal pengerjaan video penuh sampai minggu depan.', 'dibuat_oleh' => 'provider', 'status_negosiasi' => 'ditolak', 'created_at' => '2026-08-02 14:10:00']);
 
         // ================= DT7: pesanan =================
         $pesanan1 = Pesanan::create(['id_negosiasi' => $neg1->id_negosiasi, 'harga_final' => 8000, 'tanggal_pesanan' => '2026-07-29 08:10:00', 'status_pesanan' => 'dikerjakan']);
         $pesanan3 = Pesanan::create(['id_negosiasi' => $neg3->id_negosiasi, 'harga_final' => 27000, 'tanggal_pesanan' => '2026-07-22 09:00:00', 'status_pesanan' => 'selesai']);
         $pesanan4 = Pesanan::create(['id_negosiasi' => $neg4->id_negosiasi, 'harga_final' => 22000, 'tanggal_pesanan' => '2026-07-21 11:30:00', 'status_pesanan' => 'selesai']);
         $pesanan5 = Pesanan::create(['id_negosiasi' => $neg5->id_negosiasi, 'harga_final' => 70000, 'tanggal_pesanan' => '2026-07-18 10:00:00', 'status_pesanan' => 'selesai']);
-        // neg2 (Alya) sengaja belum jadi pesanan -> masih tampil sebagai "Negosiasi" di Pesanan Aktif
 
         // ================= DT8: detail_pekerjaan =================
         DetailPekerjaan::create(['id_pesanan' => $pesanan1->id_pesanan, 'instruksi_pengerjaan' => 'Jemput di Gerbang Unikom jam 15.00, tujuan Stasiun Bandung.', 'format_hasil' => '-', 'tanggal_upload' => '2026-07-29 08:12:00', 'status' => 'lengkap']);
@@ -108,8 +115,10 @@ class MahasolveDummySeeder extends Seeder
         RatingReview::create(['id_pesanan' => $pesanan4->id_pesanan, 'review' => 'Makanannya sesuai request, on time.', 'rate' => 4]);
         RatingReview::create(['id_pesanan' => $pesanan5->id_pesanan, 'review' => 'Penjelasannya gampang dipahami, makasih kak!', 'rate' => 5]);
 
+        $pSiti->refreshRating();
         $pBudi->refreshRating();
         $pDewi->refreshRating();
         $pAndi->refreshRating();
+        $pWulan->refreshRating();
     }
 }
