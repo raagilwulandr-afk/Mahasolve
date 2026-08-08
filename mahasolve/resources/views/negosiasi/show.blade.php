@@ -106,7 +106,12 @@
                                         <form method="POST" action="{{ route('negosiasi.reject', $negosiasi->id_negosiasi) }}"
                                               onsubmit="return confirm('Tolak & batalkan negosiasi ini?')">
                                             @csrf
-                                            <button class="px-4 py-2 rounded-full text-sm font-medium border border-[#14162B14] bg-[#F7F8FC]">Tolak</button>
+                                            <button class="px-4 py-2 rounded-full text-sm font-bold border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 transition cursor-pointer flex items-center gap-1.5">
+                                                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                                Tolak Negosiasi
+                                            </button>
                                         </form>
                                     </div>
                                 @endif
