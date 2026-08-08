@@ -65,7 +65,7 @@ class OrderController extends Controller
                 'id' => $nego->id_negosiasi,
                 'raw_id' => $nego->id_negosiasi,
                 'id_request' => $nego->id_request,
-                'code' => 'ORD-' . str_pad($nego->id_negosiasi, 4, '0', STR_PAD_LEFT),
+                'code' => $pesanan ? 'ORD-' . str_pad($pesanan->id_pesanan, 4, '0', STR_PAD_LEFT) : 'NEG-' . str_pad($nego->id_negosiasi, 4, '0', STR_PAD_LEFT),
                 'created_at' => $nego->created_at ?? now(),
                 'date' => $nego->created_at ? $nego->created_at->format('d M Y') : now()->format('d M Y'),
                 'title' => $req->detail_kebutuhan ?? 'Request Jasa',

@@ -74,7 +74,7 @@ class CatalogController extends Controller
         $reqLayanan = RequestLayanan::create([
             'id_user' => $user->id_user,
             'kategori' => $layanan->kategori,
-            'detail_kebutuhan' => "Pembelian Layanan: {$layanan->nama_layanan}" . ($request->catatan ? " ({$request->catatan})" : ""),
+            'detail_kebutuhan' => $layanan->nama_layanan . ($request->catatan ? " ({$request->catatan})" : ""),
             'harga_awal' => $layanan->harga,
             'status_request' => 'diproses',
         ]);
