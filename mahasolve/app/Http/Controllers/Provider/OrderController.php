@@ -56,7 +56,13 @@ class OrderController extends Controller
             $pesanan = $nego->pesanan;
 
             $statusText = match ($nego->status_negosiasi) {
-                'disepakati' => $pesanan ? ucfirst($pesanan->status_pesanan) : 'Diproses',
+                'disepakati' => $pesanan ? match (strtolower($pesanan->status_pesanan)) {
+                    'selesai' => 'Selesai',
+                    'dibatalkan' => 'Dibatalkan',
+                    'dikerjakan', 'revisi', 'diproses' => 'Diproses',
+                    'menunggu_pengerjaan' => 'Menunggu Pengerjaan',
+                    default => 'Menunggu Pengerjaan',
+                } : 'Menunggu Pengerjaan',
                 'ditolak' => 'Ditolak',
                 default => 'Negosiasi',
             };

@@ -203,8 +203,9 @@
                                     :class="{
                                         'bg-amber-100 text-amber-700': order.status === 'Negosiasi',
                                         'bg-sky-100 text-sky-700': order.status === 'Diproses',
+                                        'bg-indigo-100 text-indigo-700': order.status === 'Menunggu Pengerjaan' || order.status === 'Menunggu_pengerjaan',
                                         'bg-emerald-100 text-emerald-700': order.status === 'Selesai',
-                                        'bg-rose-100 text-rose-700': order.status === 'Ditolak'
+                                        'bg-rose-100 text-rose-700': order.status === 'Ditolak' || order.status === 'Dibatalkan'
                                     }"
                                     x-text="order.status">
                                 </span>
