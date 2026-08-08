@@ -64,4 +64,19 @@ set_error_handler(function ($severity, $message, $file, $line) {
     return false;
 });
 
-$app->handleRequest(Request::capture());
+try {
+    $app->handleRequest(Request::capture());
+} catch (\Throwable $e) {
+    if (!headers_sent()) {
+        header('Content-Type: text/plain', true, 500);
+    }
+    echo "PRIMARY BOOTSTRAP EXCEPTION: " . get_class($e) . ": " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+    echo "Stack Trace:\n" . $e->getTraceAsString();
+    if ($prev = $e->getPrevious()) {
+        echo "\n\nCaused By: " . get_class($prev) . ": " . $prev->getMessage() . "\n";
+        echo "File: " . $prev->getFile() . ":" . $prev->getLine() . "\n\n";
+        echo "Stack Trace:\n" . $prev->getTraceAsString();
+    }
+    exit(1);
+}
