@@ -92,7 +92,11 @@ class NegosiasiController extends Controller
             'status_negosiasi' => 'pending',
         ]);
 
-        return redirect()->route('negosiasi.show', $negosiasi->id_negosiasi)->with('success', 'Pesan terkirim.');
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('negosiasi.show', $negosiasi->id_negosiasi);
     }
 
     // Setuju dengan tawaran terakhir di thread -> otomatis buat pesanan (PB-05 -> PB-06)

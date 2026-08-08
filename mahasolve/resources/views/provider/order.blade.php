@@ -11,6 +11,99 @@
             counterPrice: '',
             counterNote: '',
 
+            chatInputText: '',
+
+            async sendChatMessage(e) {
+                const msg = this.chatInputText ? this.chatInputText.trim() : '';
+                if (!msg || !this.activeOrder) return;
+
+                const form = e.target;
+                const activeOrder = this.activeOrder;
+
+                // Push message bubble instantly to chat UI (0ms latency)
+                const now = new Date();
+                const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                
+                activeOrder.chats.push({
+                    id: Date.now(),
+                    message: msg,
+                    text: msg,
+                    sender: 'provider',
+                    isProvider: true,
+                    time: timeStr,
+                    offeredPrice: null
+                });
+
+                this.chatInputText = '';
+
+                // Scroll to bottom of chat
+                this.$nextTick(() => {
+                    const chatContainer = document.getElementById('chatContainer');
+                    if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+                });
+
+                // Send background fetch without page reload
+                try {
+                    const formData = new FormData(form);
+                    await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+
+            async sendCounterNego(e) {
+                const form = e.target;
+                const activeOrder = this.activeOrder;
+                if (!activeOrder) return;
+
+                const formData = new FormData(form);
+                const price = formData.get('harga_tawaran');
+                const note = formData.get('pesan');
+                const msg = note ? note : ('Penawaran balik: Rp' + this.formatNumber(price));
+
+                const now = new Date();
+                const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+                activeOrder.chats.push({
+                    id: Date.now(),
+                    message: msg,
+                    text: msg,
+                    sender: 'provider',
+                    isProvider: true,
+                    time: timeStr,
+                    offeredPrice: price
+                });
+
+                activeOrder.customerOffer = price;
+                activeOrder.currentPrice = price;
+
+                // Scroll to bottom
+                this.$nextTick(() => {
+                    const chatContainer = document.getElementById('chatContainer');
+                    if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+                });
+
+                try {
+                    await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+
             // Safe Blade JSON Mapping
             orders: @json($orders),
 
@@ -207,7 +300,7 @@
                                      </span>
                                  </h3>
 
-                                 <div class="space-y-3 max-h-80 overflow-y-auto p-1">
+                                 <div id="chatContainer" class="space-y-3 max-h-80 overflow-y-auto p-1 scroll-smooth">
                                      <template x-for="chat in activeOrder.chats" :key="chat.id">
                                          <div :class="chat.sender === 'provider' ? 'flex flex-col items-end' : 'flex flex-col items-start'">
                                              <div :class="chat.sender === 'provider' ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-none'"
@@ -228,7 +321,7 @@
 
                                  <!-- QUICK INLINE NEGO PRICE COUNTER-OFFER FORM (Nego Langsung In-Chat) -->
                                 <template x-if="activeOrder.status === 'Negosiasi'">
-                                    <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/counter-nego'" method="POST" class="p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 mb-3">
+                                    <form @submit.prevent="sendCounterNego($event)" :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/counter-nego'" method="POST" class="p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 mb-3">
                                         @csrf
                                         <div class="flex items-center justify-between">
                                             <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5 font-display">
@@ -315,9 +408,9 @@
 
                                 <!-- FORM BALAS CHAT STANDARD (Selalu aktif selama pesanan berjalan / tidak dibatalkan) -->
                                 <template x-if="activeOrder.status !== 'Ditolak' && activeOrder.status !== 'Dibatalkan'">
-                                    <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/chat'" method="POST" class="flex gap-2 pt-2 border-t border-slate-100">
+                                    <form @submit.prevent="sendChatMessage($event)" :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/chat'" method="POST" class="flex gap-2 pt-2 border-t border-slate-100">
                                         @csrf
-                                        <input type="text" name="pesan" required placeholder="Ketik balasan pesan atau instruksi ke mahasiswa..."
+                                        <input type="text" x-model="chatInputText" name="pesan" required placeholder="Ketik balasan pesan atau instruksi ke mahasiswa..."
                                             class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition">
                                         <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

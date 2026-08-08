@@ -162,6 +162,10 @@ class OrderController extends Controller
             ]);
         }
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'harga_tawaran' => $nego->harga_tawaran]);
+        }
+
         return back();
     }
 
@@ -206,6 +210,10 @@ class OrderController extends Controller
                 'harga_tawaran' => $request->harga_tawaran,
                 'status_negosiasi' => 'ditawar_ulang',
             ]);
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'harga_tawaran' => $request->harga_tawaran]);
         }
 
         return redirect()->route('order', ['active' => $nego->id_negosiasi])->with('success', 'Penawaran balik berhasil dikirim.');

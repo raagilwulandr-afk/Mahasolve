@@ -141,20 +141,61 @@
 
             {{-- Form kirim pesan/tawaran baru --}}
             @if ($terakhir->status_negosiasi !== 'disepakati' && $terakhir->status_negosiasi !== 'ditolak')
-                <form id="counter-form" method="POST" action="{{ route('negosiasi.counter', $negosiasi->id_negosiasi) }}"
+                <form id="counter-form" onsubmit="event.preventDefault(); sendMahasiswaChat(this);" method="POST" action="{{ route('negosiasi.counter', $negosiasi->id_negosiasi) }}"
                       class="border-t border-[#14162B0E] p-4 {{ $terakhir->dibuat_oleh === 'mahasiswa' ? 'hidden' : '' }}">
                     @csrf
                     <div class="flex gap-2">
-                        <input type="number" name="harga_tawaran" min="0" required placeholder="Harga (Rp)"
+                        <input type="number" id="input_harga_tawaran" name="harga_tawaran" min="0" required placeholder="Harga (Rp)"
                                value="{{ $terakhir->harga_tawaran }}"
                                class="w-32 bg-[#EEF1FB80] rounded-full px-4 py-2.5 text-sm focus:outline-none">
-                        <input type="text" name="detail_negosiasi" placeholder="Tulis pesan..."
+                        <input type="text" id="input_detail_negosiasi" name="detail_negosiasi" placeholder="Tulis pesan..."
                                class="flex-1 bg-[#EEF1FB80] rounded-full px-4 py-2.5 text-sm focus:outline-none">
-                        <button class="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style="background:#4F46E5;">
+                        <button type="submit" class="w-11 h-11 rounded-full flex items-center justify-center shrink-0 cursor-pointer" style="background:#4F46E5;">
                             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M17 3L2 9l6 2 2 6 7-14z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                     </div>
                 </form>
+
+                <script>
+                    async function sendMahasiswaChat(form) {
+                        const harga = document.getElementById('input_harga_tawaran').value;
+                        const detail = document.getElementById('input_detail_negosiasi').value;
+                        if (!harga) return;
+
+                        const now = new Date();
+                        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+                        const chatContainer = document.getElementById('chat-container');
+                        const bubble = document.createElement('div');
+                        bubble.className = 'flex justify-end';
+                        bubble.innerHTML = `
+                            <div class="max-w-md bg-[#4F46E5] text-white rounded-2xl rounded-br-md px-4 py-2.5 shadow-sm">
+                                <p class="text-sm">${detail || ('Menawarkan Rp' + parseInt(harga).toLocaleString('id-ID'))}</p>
+                                <p class="text-[10px] mt-1 text-right text-white/70">${timeStr}</p>
+                            </div>
+                        `;
+                        if (chatContainer) {
+                            chatContainer.appendChild(bubble);
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                        }
+
+                        form.style.display = 'none';
+
+                        try {
+                            const formData = new FormData(form);
+                            await fetch(form.action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'application/json'
+                                }
+                            });
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    }
+                </script>
             @endif
         <!-- MODERN CUSTOM GLASSMORPHISM REJECT CONFIRMATION MODAL -->
         <template x-teleport="body">
