@@ -21,23 +21,22 @@ foreach ($directories as $dir) {
     }
 }
 
-// 2. Set environment paths & SQLite database in /tmp
+// 2. Set environment paths & Database fallback configuration
 putenv("APP_STORAGE_PATH={$tmpStorage}");
 putenv("VIEW_COMPILED_PATH={$tmpStorage}/framework/views");
 
-$tmpSqlite = '/tmp/database.sqlite';
-if (!file_exists($tmpSqlite)) {
-    $seedSqlite = __DIR__ . '/../mahasolve/database/database.sqlite';
-    if (file_exists($seedSqlite)) {
-        @copy($seedSqlite, $tmpSqlite);
-    } else {
-        @touch($tmpSqlite);
-    }
+putenv("APP_URL=https://mahasolve.vercel.app");
+
+if (!getenv('DB_CONNECTION') || getenv('DB_CONNECTION') === 'sqlite') {
+    putenv("DB_CONNECTION=pgsql");
+    putenv("DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com");
+    putenv("DB_PORT=5432");
+    putenv("DB_DATABASE=postgres");
+    putenv("DB_USERNAME=postgres.mbqpxgbfjrexjmvfypip");
+    putenv("DB_PASSWORD=cDt1DoEy8WZN5XKN");
+    putenv("DB_SSLMODE=require");
 }
 
-putenv("APP_URL=https://mahasolve.vercel.app");
-putenv("DB_CONNECTION=sqlite");
-putenv("DB_DATABASE={$tmpSqlite}");
 putenv("SESSION_DRIVER=cookie");
 putenv("CACHE_STORE=array");
 putenv("QUEUE_CONNECTION=sync");
@@ -62,6 +61,3 @@ $app->useStoragePath($tmpStorage);
 
 // 7. Handle incoming HTTP request
 $app->handleRequest(\Illuminate\Http\Request::capture());
-
-
-
