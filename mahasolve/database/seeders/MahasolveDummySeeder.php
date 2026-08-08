@@ -94,31 +94,39 @@ class MahasolveDummySeeder extends Seeder
         $neg7 = Negosiasi::create(['id_request' => $req7->id_request, 'id_provider' => $pWulan->id_provider, 'harga_tawaran' => 60000, 'detail_negosiasi' => 'Maaf kak, jadwal pengerjaan video penuh sampai minggu depan.', 'dibuat_oleh' => 'provider', 'status_negosiasi' => 'ditolak', 'created_at' => '2026-08-02 14:10:00']);
 
         // ================= DT7: pesanan =================
-        $pesanan1 = Pesanan::create(['id_negosiasi' => $neg1->id_negosiasi, 'harga_final' => 8000, 'tanggal_pesanan' => '2026-07-29 08:10:00', 'status_pesanan' => 'dikerjakan']);
+        $pesanan1 = Pesanan::create(['id_negosiasi' => $neg1->id_negosiasi, 'harga_final' => 8000, 'tanggal_pesanan' => '2026-07-29 08:10:00', 'status_pesanan' => 'selesai']);
+        $pesanan2 = Pesanan::create(['id_negosiasi' => $neg2->id_negosiasi, 'harga_final' => 45000, 'tanggal_pesanan' => '2026-07-28 10:00:00', 'status_pesanan' => 'dikerjakan']);
         $pesanan3 = Pesanan::create(['id_negosiasi' => $neg3->id_negosiasi, 'harga_final' => 27000, 'tanggal_pesanan' => '2026-07-22 09:00:00', 'status_pesanan' => 'selesai']);
         $pesanan4 = Pesanan::create(['id_negosiasi' => $neg4->id_negosiasi, 'harga_final' => 22000, 'tanggal_pesanan' => '2026-07-21 11:30:00', 'status_pesanan' => 'selesai']);
         $pesanan5 = Pesanan::create(['id_negosiasi' => $neg5->id_negosiasi, 'harga_final' => 70000, 'tanggal_pesanan' => '2026-07-18 10:00:00', 'status_pesanan' => 'selesai']);
 
         // ================= DT8: detail_pekerjaan =================
-        DetailPekerjaan::create(['id_pesanan' => $pesanan1->id_pesanan, 'instruksi_pengerjaan' => 'Jemput di Gerbang Unikom jam 15.00, tujuan Stasiun Bandung.', 'format_hasil' => '-', 'tanggal_upload' => '2026-07-29 08:12:00', 'status' => 'lengkap']);
+        DetailPekerjaan::create(['id_pesanan' => $pesanan1->id_pesanan, 'instruksi_pengerjaan' => 'Jemput di Gerbang Unikom jam 15.00, tujuan Stasiun Bandung.', 'format_hasil' => 'Perjalanan selesai', 'tanggal_upload' => '2026-07-29 08:12:00', 'status' => 'lengkap']);
+        DetailPekerjaan::create(['id_pesanan' => $pesanan2->id_pesanan, 'instruksi_pengerjaan' => 'Desain PPT 20 slide tema minimalis.', 'format_hasil' => 'Draft_Sidang_v1.pptx', 'tanggal_upload' => '2026-07-28 12:00:00', 'status' => 'lengkap']);
 
         // ================= DT9: tracking_pesanan =================
-        TrackingPesanan::create(['id_pesanan' => $pesanan1->id_pesanan, 'status_pengerjaan' => 'Provider dalam perjalanan menuju titik jemput', 'created_at' => '2026-07-29 14:50:00']);
+        TrackingPesanan::create(['id_pesanan' => $pesanan1->id_pesanan, 'status_pengerjaan' => 'Perjalanan selesai & penumpangan sampai lokasi.', 'created_at' => '2026-07-29 15:30:00']);
+        TrackingPesanan::create(['id_pesanan' => $pesanan2->id_pesanan, 'status_pengerjaan' => 'Draft awal slide telah selesai 50%', 'created_at' => '2026-07-28 14:00:00']);
 
         // ================= DT10: pembayaran =================
+        Pembayaran::create(['id_pesanan' => $pesanan1->id_pesanan, 'metode_pembayaran' => 'Gopay', 'total_bayar' => 8000, 'status_bayar' => 'dikonfirmasi']);
+        Pembayaran::create(['id_pesanan' => $pesanan2->id_pesanan, 'metode_pembayaran' => 'QRIS BCA', 'total_bayar' => 45000, 'status_bayar' => 'dikonfirmasi']);
         Pembayaran::create(['id_pesanan' => $pesanan3->id_pesanan, 'metode_pembayaran' => 'Transfer Bank', 'total_bayar' => 27000, 'status_bayar' => 'dikonfirmasi']);
         Pembayaran::create(['id_pesanan' => $pesanan4->id_pesanan, 'metode_pembayaran' => 'E-Wallet', 'total_bayar' => 22000, 'status_bayar' => 'dikonfirmasi']);
         Pembayaran::create(['id_pesanan' => $pesanan5->id_pesanan, 'metode_pembayaran' => 'Transfer Bank', 'total_bayar' => 70000, 'status_bayar' => 'dikonfirmasi']);
 
         // ================= DT11: rating_review =================
+        RatingReview::create(['id_pesanan' => $pesanan1->id_pesanan, 'review' => 'Sangat cepat dan driver ramah sekali!', 'rate' => 5]);
         RatingReview::create(['id_pesanan' => $pesanan3->id_pesanan, 'review' => 'Cepat dan hasil jilidnya rapi!', 'rate' => 5]);
         RatingReview::create(['id_pesanan' => $pesanan4->id_pesanan, 'review' => 'Makanannya sesuai request, on time.', 'rate' => 4]);
         RatingReview::create(['id_pesanan' => $pesanan5->id_pesanan, 'review' => 'Penjelasannya gampang dipahami, makasih kak!', 'rate' => 5]);
 
+        $pRizky->refreshRating();
         $pSiti->refreshRating();
         $pBudi->refreshRating();
         $pDewi->refreshRating();
         $pAndi->refreshRating();
+        $pAlya->refreshRating();
         $pWulan->refreshRating();
     }
 }

@@ -26,7 +26,7 @@ class OrderController extends Controller
             ]);
         }
 
-        // Auto-initialize Negosiasi jika Provider membuka Request baru atau belum punya negosiasi aktif
+        // Auto-initialize Negosiasi HANYA jika Provider mengklik request spesifik dari Dashboard (?active=id_request)
         $activeId = $request->get('active');
         if ($activeId) {
             $reqLayanan = \App\Models\RequestLayanan::find($activeId);
@@ -36,20 +36,6 @@ class OrderController extends Controller
                     'id_provider' => $provider->id_provider,
                 ], [
                     'harga_tawaran' => $reqLayanan->harga_awal,
-                    'detail_negosiasi' => 'Halo! Saya penyedia jasa terverifikasi dan siap mengambil pekerjaan ini.',
-                    'dibuat_oleh' => 'provider',
-                    'status_negosiasi' => 'pending',
-                ]);
-            }
-        } else {
-            // Ambil semua request layanan terbuka & daftarkan ke negosiasi provider agar tidak kosong
-            $openRequests = \App\Models\RequestLayanan::all();
-            foreach ($openRequests as $reqItem) {
-                Negosiasi::firstOrCreate([
-                    'id_request' => $reqItem->id_request,
-                    'id_provider' => $provider->id_provider,
-                ], [
-                    'harga_tawaran' => $reqItem->harga_awal,
                     'detail_negosiasi' => 'Halo! Saya penyedia jasa terverifikasi dan siap mengambil pekerjaan ini.',
                     'dibuat_oleh' => 'provider',
                     'status_negosiasi' => 'pending',
