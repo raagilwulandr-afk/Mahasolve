@@ -58,21 +58,113 @@
                             Struk Digital
                         </a>
                     @endif
-                    <a href="https://wa.me/{{ $noHpTarget }}?text=Halo%20{{ urlencode($targetUser->username) }},%20saya%20terkait%20pesanan%20ORD-{{ str_pad($pesanan->id_pesanan, 4, '0', STR_PAD_LEFT) }}" target="_blank"
-                       class="inline-flex items-center justify-center gap-1.5 w-full py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition shadow-sm cursor-pointer">
-                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l.288.459-1.15 4.195 4.298-1.127.307.14z"/></svg>
-                        Chat WA {{ auth()->user()->isMahasiswa() ? 'Mitra' : 'Mahasiswa' }}
-                    </a>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        function mhsChatApp() {
+            return {
+                chatList: @json($chats ?? []),
+                chatInput: '',
+                isSending: false,
+
+                async sendChat(event) {
+                    if (!this.chatInput.trim() || this.isSending) return;
+                    const msgText = this.chatInput.trim();
+                    this.chatInput = '';
+                    this.isSending = true;
+
+                    this.chatList.push({
+                        id: Date.now(),
+                        message: msgText,
+                        harga_tawaran: null,
+                        offered_price: null,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        sender: 'mahasiswa'
+                    });
+
+                    this.$nextTick(() => {
+                        const box = document.getElementById('mhs-chat-feed');
+                        if (box) box.scrollTop = box.scrollHeight;
+                    });
+
+                    try {
+                        const form = event.target;
+                        const formData = new FormData(form);
+                        formData.set('detail_negosiasi', msgText);
+
+                        await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: formData
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    } finally {
+                        this.isSending = false;
+                    }
+                }
+            };
+        }
+    </script>
+
     <!-- MAIN GRID 2 KOLOM -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-        <!-- KOLOM KIRI: DELIVERABLES & PROGRESS TRACKER (8 COLS) -->
+        <!-- KOLOM KIRI: IN-APP CHAT, DELIVERABLES & PROGRESS TRACKER (8 COLS) -->
         <div class="lg:col-span-8 space-y-6">
+
+            <!-- PERCAKAPAN & LOG PENGERJAAN (IN-APP CHAT MAHASISWA) -->
+            <div x-data="mhsChatApp()" class="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+                            💬
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-sm text-slate-900">Percakapan &amp; Log Pengerjaan</h3>
+                            <p class="text-[11px] text-slate-400">Komunikasi langsung dalam aplikasi tanpa perlu aplikasi pihak ketiga.</p>
+                        </div>
+                    </div>
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Live Chat
+                    </span>
+                </div>
+
+                <!-- CHAT FEED CONTAINER -->
+                <div id="mhs-chat-feed" class="h-64 overflow-y-auto space-y-3 p-3 bg-slate-50/50 rounded-2xl border border-slate-100">
+                    <template x-for="chat in chatList" :key="chat.id">
+                        <div :class="chat.sender === 'mahasiswa' ? 'flex justify-end' : 'flex justify-start'">
+                            <div :class="chat.sender === 'mahasiswa' ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-none' : 'bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-none shadow-xs'"
+                                 class="max-w-[80%] p-3 text-xs space-y-1">
+                                <p x-text="chat.message" class="leading-relaxed"></p>
+                                <p :class="chat.sender === 'mahasiswa' ? 'text-indigo-200' : 'text-slate-400'"
+                                   class="text-[9px] text-right font-mono" x-text="chat.time"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- FORM KIRIM CHAT MAHASISWA -->
+                <form @submit.prevent="sendChat($event)" action="{{ route('negosiasi.counter', $pesanan->id_negosiasi) }}" method="POST" class="flex gap-2 pt-2 border-t border-slate-100">
+                    @csrf
+                    <input type="text" x-model="chatInput" name="detail_negosiasi" autocomplete="off" required placeholder="Ketik balasan pesan atau instruksi ke mitra provider..."
+                           class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition">
+                    <button type="submit" :disabled="isSending" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                        Kirim Chat
+                    </button>
+                </form>
+            </div>
 
             <!-- FORM UPLOAD DETAIL PEKERJAAN & BERKAS INTRUKSI (MAHASISWA) -->
             @if (auth()->user()->isMahasiswa() && in_array($pesanan->status_pesanan, ['menunggu_pengerjaan', 'dikerjakan', 'revisi']))

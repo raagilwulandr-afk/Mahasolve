@@ -134,7 +134,7 @@
                         <span class="inline-block px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-700">
                             ✓ Kesepakatan tercapai — Rp{{ number_format($terakhir->harga_tawaran, 0, ',', '.') }}
                         </span>
-                        <a href="{{ route('pesanan.show', $terakhir->pesanan->id_pesanan) }}" class="block mt-2 text-sm font-medium" style="color:#4F46E5;">Lihat detail pesanan &rarr;</a>
+                        <a href="{{ route('pesanan.show', ['pesanan' => $terakhir->pesanan->id_pesanan, 'pay' => 1]) }}" class="block mt-2 text-sm font-bold hover:underline transition" style="color:#4F46E5;">Lanjutkan ke Pembayaran QRIS &rarr;</a>
                     </div>
                 @endif
             </div>

@@ -125,8 +125,8 @@ class NegosiasiController extends Controller
         });
 
         return redirect()
-            ->route('pesanan.show', $terakhir->pesanan->id_pesanan)
-            ->with('success', 'Kesepakatan tercapai! Silakan lengkapi detail pekerjaan.');
+            ->route('pesanan.show', ['pesanan' => $terakhir->pesanan->id_pesanan, 'pay' => 1])
+            ->with('success', 'Negosiasi disetujui! Silakan lanjutkan ke pembayaran.');
     }
 
     public function reject(Negosiasi $negosiasi)

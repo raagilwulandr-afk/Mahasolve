@@ -155,7 +155,23 @@ class PesananController extends Controller
             'ratingReview'
         );
 
-        return view('pesanan.show', compact('pesanan'));
+        $chats = Negosiasi::where('id_request', $pesanan->negosiasi->id_request)
+            ->where('id_provider', $pesanan->negosiasi->id_provider)
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($chat) {
+                $isMahasiswaSender = ($chat->dibuat_oleh === 'mahasiswa');
+                return (object) [
+                    'id' => $chat->id_negosiasi,
+                    'message' => $chat->detail_negosiasi ?? ('Penawaran harga: Rp ' . number_format($chat->harga_tawaran, 0, ',', '.')),
+                    'harga_tawaran' => $chat->harga_tawaran,
+                    'offered_price' => $chat->harga_tawaran,
+                    'time' => $chat->created_at ? $chat->created_at->format('H:i') : now()->format('H:i'),
+                    'sender' => $isMahasiswaSender ? 'mahasiswa' : 'provider',
+                ];
+            });
+
+        return view('pesanan.show', compact('pesanan', 'chats'));
     }
 
     // Struk sederhana (bisa diprint) untuk pesanan yang sudah selesai
