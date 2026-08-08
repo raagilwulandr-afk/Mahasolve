@@ -14,7 +14,19 @@ class EnsureRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        abort_unless($request->user() && in_array($request->user()->role, $roles, true), 403, 'Kamu tidak punya akses ke halaman ini.');
+        $user = $request->user();
+        if (!$user) {
+            abort(401);
+        }
+
+        $activeRole = $user->getActiveRole();
+
+        // If target route requires provider role and active mode is provider, ensure provider profile exists
+        if (in_array('provider', $roles, true) && $activeRole === 'provider') {
+            $user->getOrCreateProvider();
+        }
+
+        abort_unless(in_array($activeRole, $roles, true), 403, 'Kamu tidak punya akses ke halaman ini. Silakan beralih mode di navigasi atas.');
 
         return $next($request);
     }

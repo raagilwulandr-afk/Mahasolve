@@ -67,14 +67,17 @@
                         <p class="font-medium text-gray-800">{{ $neg->provider->user->username }}</p>
                         <p class="text-sm text-gray-500">Tawaran: Rp {{ number_format($neg->harga_tawaran, 0, ',', '.') }}</p>
                     </div>
+                    @php
+                        $negStatusVal = is_object($neg->status_negosiasi) ? $neg->status_negosiasi->value : (string)$neg->status_negosiasi;
+                    @endphp
                     <span @class([
                         'text-xs px-2 py-1 rounded-full font-medium',
-                        'bg-yellow-100 text-yellow-700' => $neg->status_negosiasi === 'pending',
-                        'bg-orange-100 text-orange-700' => $neg->status_negosiasi === 'ditawar_ulang',
-                        'bg-green-100 text-green-700' => $neg->status_negosiasi === 'disepakati',
-                        'bg-red-100 text-red-700' => $neg->status_negosiasi === 'ditolak',
+                        'bg-yellow-100 text-yellow-700' => $negStatusVal === 'pending',
+                        'bg-orange-100 text-orange-700' => $negStatusVal === 'ditawar_ulang',
+                        'bg-green-100 text-green-700' => $negStatusVal === 'disepakati',
+                        'bg-red-100 text-red-700' => $negStatusVal === 'ditolak',
                     ])>
-                        {{ ucfirst(str_replace('_', ' ', $neg->status_negosiasi)) }}
+                        {{ ucfirst(str_replace('_', ' ', $negStatusVal)) }}
                     </span>
                 </div>
             </a>

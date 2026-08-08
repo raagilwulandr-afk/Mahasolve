@@ -41,14 +41,19 @@ class User extends Authenticatable
         return $this->hasMany(RequestLayanan::class, 'id_user', 'id_user');
     }
 
+    public function getActiveRole(): string
+    {
+        return session('active_role', $this->role ?? 'mahasiswa');
+    }
+
     public function isMahasiswa(): bool
     {
-        return $this->role === 'mahasiswa';
+        return $this->getActiveRole() === 'mahasiswa';
     }
 
     public function isProvider(): bool
     {
-        return $this->role === 'provider';
+        return $this->getActiveRole() === 'provider';
     }
 
     // Helper: Ambil atau buat otomatis entri Provider untuk user ini
@@ -56,8 +61,11 @@ class User extends Authenticatable
     {
         return $this->provider ?? Provider::create([
             'id_user' => $this->id_user,
-            'rating' => 0.0,
-            'detail_provider' => 'Provider Jasa Mahasolve',
+            'rating' => 5.0,
+            'detail_provider' => 'Mitra Jasa Terverifikasi Mahasolve',
+            'status_verifikasi' => 'terverifikasi',
+            'nomor_ktm' => 'KTM-UNIKOM-' . str_pad((string)$this->id_user, 5, '0', STR_PAD_LEFT),
+            'nomor_sim' => 'SIM-C-BANDUNG',
         ]);
     }
 

@@ -55,13 +55,16 @@
                     <p class="font-semibold text-sm">{{ $negosiasi->provider->user->username }}</p>
                     <p class="text-xs" style="color:#16A34A;">Online sekarang</p>
                 </div>
+                @php
+                    $statusNegoVal = is_object($terakhir->status_negosiasi) ? $terakhir->status_negosiasi->value : (string)$terakhir->status_negosiasi;
+                @endphp
                 <span @class([
                     'text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap',
-                    'bg-[#F59E0B26] text-[#F59E0B]' => in_array($terakhir->status_negosiasi, ['pending', 'ditawar_ulang']),
-                    'bg-green-100 text-green-700' => $terakhir->status_negosiasi === 'disepakati',
-                    'bg-red-100 text-red-700' => $terakhir->status_negosiasi === 'ditolak',
+                    'bg-[#F59E0B26] text-[#F59E0B]' => in_array($statusNegoVal, ['pending', 'ditawar_ulang']),
+                    'bg-green-100 text-green-700' => $statusNegoVal === 'disepakati',
+                    'bg-red-100 text-red-700' => $statusNegoVal === 'ditolak',
                 ])>
-                    {{ ucfirst(str_replace('_', ' ', $terakhir->status_negosiasi)) }}
+                    {{ ucfirst(str_replace('_', ' ', $statusNegoVal)) }}
                 </span>
             </div>
 

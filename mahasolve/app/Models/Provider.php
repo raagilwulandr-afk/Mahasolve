@@ -13,6 +13,9 @@ class Provider extends Model
         'id_user',
         'rating',
         'detail_provider',
+        'status_verifikasi',
+        'nomor_ktm',
+        'nomor_sim',
     ];
 
     public function user()

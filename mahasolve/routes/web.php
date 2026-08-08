@@ -31,10 +31,37 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// --- DASHBOARD REDIRECT BASED ON ROLE ---
+// --- DUAL-PERSONA HYBRID MODE SWITCHER ---
+Route::middleware('auth')->post('/switch-mode', function (\Illuminate\Http\Request $request) {
+    $targetRole = $request->input('role');
+    if (!in_array($targetRole, ['mahasiswa', 'provider'], true)) {
+        return back()->with('error', 'Mode tidak valid');
+    }
+
+    $user = auth()->user();
+    
+    // Jika mencoba beralih ke Mode Provider tetapi belum punya profil provider & belum mengonfirmasi
+    if ($targetRole === 'provider' && !$user->provider && !$request->boolean('confirm')) {
+        return back()->with('show_provider_modal', true);
+    }
+
+    if ($targetRole === 'provider') {
+        $user->getOrCreateProvider();
+    }
+
+    session(['active_role' => $targetRole]);
+
+    if ($targetRole === 'provider') {
+        return redirect()->route('provider.dashboard')->with('success', 'Akun Mitra Provider berhasil didaftarkan! Selamat datang di Mode Provider.');
+    }
+
+    return redirect()->route('catalog.index')->with('success', 'Berhasil beralih ke Mode Mahasiswa!');
+})->name('switch-mode');
+
+// --- DASHBOARD REDIRECT BASED ON ACTIVE MODE ---
 Route::middleware('auth')->get('/dashboard', function () {
     $user = auth()->user();
-    if ($user->role === 'provider') {
+    if ($user->isProvider()) {
         return redirect()->route('provider.dashboard');
     }
     return redirect()->route('catalog.index');

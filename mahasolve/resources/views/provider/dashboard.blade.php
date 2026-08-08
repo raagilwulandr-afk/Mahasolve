@@ -6,8 +6,14 @@
 <div class="space-y-8">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900 font-display">Dashboard Penyedia Jasa</h1>
-            <p class="text-sm text-slate-500 mt-1">Kelola pesanan, negosiasi, dan pendapatanmu.</p>
+            <div class="flex items-center gap-2">
+                <h1 class="text-2xl font-bold text-slate-900 font-display">Dashboard Penyedia Jasa</h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold tracking-wider uppercase flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Terverifikasi Unikom
+                </span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">Kelola pesanan, negosiasi, dan pendapatanmu. (KTM: {{ auth()->user()->provider?->nomor_ktm ?? 'KTM-UNIKOM-VERIFIED' }})</p>
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('my-service') }}" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs rounded-2xl transition shadow-md shadow-indigo-500/20 flex items-center gap-1.5 cursor-pointer">

@@ -24,7 +24,7 @@
                 @auth
                     <!-- LOGO & ROLE BRANDING -->
                     <div class="flex items-center gap-3">
-                        <a href="{{ auth()->user()->role === 'provider' ? route('provider.dashboard') : route('catalog.index') }}" class="flex items-center gap-2.5 group">
+                        <a href="{{ auth()->user()->isProvider() ? route('provider.dashboard') : route('catalog.index') }}" class="flex items-center gap-2.5 group">
                             <span class="w-9 h-9 rounded-2xl flex items-center justify-center shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform"
                                   style="background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -34,17 +34,17 @@
                             </span>
                             <div class="flex items-center gap-2">
                                 <span class="font-display font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition">Mahasolve</span>
-                                <span class="text-[9px] font-black px-2 py-0.5 rounded-full {{ auth()->user()->role === 'provider' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }} uppercase tracking-wider">
-                                    {{ auth()->user()->role === 'provider' ? 'Mitra Provider' : 'Mahasiswa' }}
+                                <span class="text-[9px] font-black px-2 py-0.5 rounded-full {{ auth()->user()->isProvider() ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }} uppercase tracking-wider">
+                                    {{ auth()->user()->isProvider() ? 'Mode Mitra Provider' : 'Mode Mahasiswa' }}
                                 </span>
                             </div>
                         </a>
                     </div>
 
-                    <!-- STRICT ROLE-BASED DESKTOP NAVIGATION TABS -->
+                    <!-- DUAL-PERSONA DESKTOP NAVIGATION TABS -->
                     <div class="hidden md:flex items-center gap-1.5 text-xs font-semibold">
-                        @if (auth()->user()->role === 'mahasiswa')
-                            <!-- MENU KHUSUS AKUN MAHASISWA -->
+                        @if (auth()->user()->isMahasiswa())
+                            <!-- MENU KHUSUS MODE MAHASISWA -->
                             <x-nav-link :href="route('catalog.index')" :active="request()->routeIs('catalog.*') || request()->routeIs('home')">
                                 <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -64,7 +64,7 @@
                                 Request Custom
                             </x-nav-link>
                         @else
-                            <!-- MENU KHUSUS AKUN PROVIDER -->
+                            <!-- MENU KHUSUS MODE PROVIDER -->
                             <x-nav-link :href="route('provider.dashboard')" :active="request()->routeIs('provider.dashboard')">
                                 <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
@@ -217,16 +217,22 @@
                                     <div class="px-5 py-3 border-b border-slate-100 bg-slate-50/50">
                                         <p class="text-xs font-extrabold text-slate-900">@ {{ auth()->user()->username }}</p>
                                         <p class="text-[11px] text-slate-400 truncate mt-0.5">{{ auth()->user()->email }}</p>
-                                        <span class="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded-full {{ auth()->user()->role === 'provider' ? 'bg-indigo-50 text-indigo-700' : 'bg-emerald-50 text-emerald-700' }}">
-                                            Role: {{ ucfirst(auth()->user()->role) }}
-                                        </span>
+                                        <div class="mt-2 pt-2 border-t border-slate-200/60">
+                                            <form method="POST" action="{{ route('switch-mode') }}">
+                                                @csrf
+                                                <input type="hidden" name="role" value="{{ auth()->user()->isProvider() ? 'mahasiswa' : 'provider' }}">
+                                                <button type="submit" class="w-full px-3 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center justify-between cursor-pointer border {{ auth()->user()->isProvider() ? 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100' : 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100' }}">
+                                                    <span>{{ auth()->user()->isProvider() ? '🔄 Mode Provider' : '🔄 Mode Mahasiswa' }}</span>
+                                                    <span class="underline font-extrabold text-[10px]">Switch</span>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
 
                                     <div class="py-1">
-                                        @if (auth()->user()->role === 'mahasiswa')
+                                        @if (auth()->user()->isMahasiswa())
                                             <a href="{{ route('catalog.index') }}" class="block px-5 py-2 text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">Jelajah Layanan</a>
                                             <a href="{{ route('pesanan.index') }}" class="block px-5 py-2 text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">Pesanan Saya</a>
-                                            <a href="{{ route('review.index') }}" class="block px-5 py-2 text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">Riwayat &amp; Ulasan</a>
                                         @else
                                             <a href="{{ route('provider.dashboard') }}" class="block px-5 py-2 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition">Dashboard Provider</a>
                                             <a href="{{ route('my-service') }}" class="block px-5 py-2 text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">Kelola Layanan Saya</a>
@@ -283,8 +289,18 @@
             @auth
                 <div x-show="openMobileMenu" @click.away="openMobileMenu = false" x-transition
                      class="md:hidden bg-white border-b border-slate-200/80 px-6 py-4 space-y-3" style="display:none;">
+                    <div class="pb-2 border-b border-slate-100">
+                        <form method="POST" action="{{ route('switch-mode') }}">
+                            @csrf
+                            <input type="hidden" name="role" value="{{ auth()->user()->isProvider() ? 'mahasiswa' : 'provider' }}">
+                            <button type="submit" class="w-full px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center justify-between border {{ auth()->user()->isProvider() ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-emerald-50 border-emerald-200 text-emerald-700' }}">
+                                <span>{{ auth()->user()->isProvider() ? '🔄 Aktif: Mode Provider' : '🔄 Aktif: Mode Mahasiswa' }}</span>
+                                <span class="underline text-[10px]">Beralih Mode</span>
+                            </button>
+                        </form>
+                    </div>
                     <div class="space-y-1">
-                        @if (auth()->user()->role === 'mahasiswa')
+                        @if (auth()->user()->isMahasiswa())
                             <a href="{{ route('catalog.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-indigo-50 hover:text-indigo-600">Jelajah Layanan</a>
                             <a href="{{ route('pesanan.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-indigo-50 hover:text-indigo-600">Pesanan Saya</a>
                             <a href="{{ route('mahasiswa.request.create') }}" class="block px-3 py-2 rounded-xl text-xs font-bold text-slate-800 hover:bg-indigo-50 hover:text-indigo-600">Request Custom</a>
@@ -324,13 +340,33 @@
                 </div>
             @endif
 
-            @if ($errors->any())
-                <div class="mb-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 px-5 py-3.5 text-xs font-bold">
-                    <ul class="list-disc list-inside space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+            @if (session('show_provider_modal'))
+                <!-- PROVIDER ACCOUNT REGISTRATION CONFIRMATION MODAL -->
+                <div x-data="{ openModal: true }" x-show="openModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+                    <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-slate-100 animate-in fade-in zoom-in-95">
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 font-display">Aktifkan Akun Mitra Provider?</h3>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                Kamu belum terdaftar sebagai Mitra Provider. Apakah Anda ingin mengaktifkan akun Mitra Provider Mahasolve sekarang? Sistem akan secara otomatis mendaftarkan profil mitra dan verifikasi KTM kamu.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 pt-2">
+                            <button type="button" @click="openModal = false" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer">Batal</button>
+                            <form method="POST" action="{{ route('switch-mode') }}">
+                                @csrf
+                                <input type="hidden" name="role" value="provider">
+                                <input type="hidden" name="confirm" value="1">
+                                <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition cursor-pointer">
+                                    Ya, Daftarkan &amp; Beralih Mode
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             @endif
 

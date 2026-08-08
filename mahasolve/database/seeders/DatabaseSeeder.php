@@ -8,6 +8,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Supabase 100% mode: seed data dihapus agar database bersih dan menggunakan Supabase secara langsung.
+        $this->call(ExemplarBusinessFlowSeeder::class);
     }
 }

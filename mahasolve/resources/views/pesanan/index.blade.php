@@ -102,9 +102,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <div class="text-xs text-amber-900 leading-relaxed">
-                                <p class="font-bold">Penawaran Dalam Diskusi Interaktif</p>
+                                <p class="font-bold">Diskusi Penawaran Harga</p>
                                 <p class="mt-0.5 text-amber-800">
-                                    Penyedia <span class="font-bold">{{ $selectedNegosiasi->provider->user->username }}</span> dan kamu sedang dalam tahap diskusi tawar-menawar harga dan instruksi pengerjaan.
+                                    Mitra <span class="font-bold">{{ $selectedNegosiasi->provider->user->username }}</span> telah mengajukan penawaran. Kamu dapat menyetujui tawaran ini atau mengajukan tawar ulang.
                                 </p>
                             </div>
                         </div>
@@ -212,20 +212,18 @@
                                 @if ($selected->ratingReview->review)
                                     <p class="text-sm text-[#6B6F85] mt-1">{{ $selected->ratingReview->review }}</p>
                                 @endif
-                                @php
-                                    $noHpMitra = preg_replace('/^0/', '62', $selected->negosiasi->provider->user->no_hp ?? '08123456789');
-                                @endphp
                                 <div class="flex gap-2 mt-4 flex-wrap">
                                     <a href="{{ route('pesanan.struk', $selected->id_pesanan) }}" target="_blank"
                                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-[#14162B14] bg-[#F7F8FC] hover:bg-white transition">
                                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 3h10v6H5zM4 8h12M6 15h8" stroke="#16182B" stroke-width="1.3"/></svg>
                                         Lihat Struk
                                     </a>
-                                    <a href="https://wa.me/{{ $noHpMitra }}?text=Halo%20{{ urlencode($selected->negosiasi->provider->user->username) }},%20saya%20pemesan%20ORD-{{ str_pad($selected->id_pesanan, 4, '0', STR_PAD_LEFT) }}" target="_blank"
-                                       class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition">
-                                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l.288.459-1.15 4.195 4.298-1.127.307.14z"/></svg>
-                                        Chat WA Mitra
-                                    </a>
+                                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-slate-800 bg-indigo-50 border border-indigo-200">
+                                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                        </svg>
+                                        <span>Kontak In-App: {{ $selected->negosiasi->provider->user->no_hp ?? '-' }}</span>
+                                    </div>
                                 </div>
                             @elseif ($selected->bolehDireview())
                                 <p class="font-display font-bold text-base">Beri penilaian</p>
