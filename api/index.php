@@ -26,8 +26,13 @@ putenv("APP_STORAGE_PATH={$tmpStorage}");
 putenv("VIEW_COMPILED_PATH={$tmpStorage}/framework/views");
 
 $tmpSqlite = '/tmp/database.sqlite';
-if (!file_exists($tmpSqlite) && file_exists(__DIR__ . '/../mahasolve/database/database.sqlite')) {
-    @copy(__DIR__ . '/../mahasolve/database/database.sqlite', $tmpSqlite);
+if (!file_exists($tmpSqlite)) {
+    $seedSqlite = __DIR__ . '/../mahasolve/database/database.sqlite';
+    if (file_exists($seedSqlite)) {
+        @copy($seedSqlite, $tmpSqlite);
+    } else {
+        @touch($tmpSqlite);
+    }
 }
 
 putenv("APP_URL=https://mahasolve.vercel.app");
