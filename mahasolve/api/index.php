@@ -1,40 +1,42 @@
 <?php
 
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
+
+if (!defined('LARAVEL_START')) {
+    define('LARAVEL_START', microtime(true));
+}
+
 // Vercel Serverless environment initialization
-if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
-    $storageDirs = [
-        '/tmp/storage/framework/views',
-        '/tmp/storage/framework/sessions',
-        '/tmp/storage/framework/cache/data',
-        '/tmp/storage/logs',
-        '/tmp/bootstrap/cache',
-    ];
+$storageDirs = [
+    '/tmp/storage/framework/views',
+    '/tmp/storage/framework/sessions',
+    '/tmp/storage/framework/cache/data',
+    '/tmp/storage/logs',
+    '/tmp/bootstrap/cache',
+];
 
-    foreach ($storageDirs as $dir) {
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
-        }
+foreach ($storageDirs as $dir) {
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0755, true);
     }
-
-    putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
-    $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
-    $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 }
 
-// Forward Vercel requests to Laravel entrypoint
-require __DIR__ . '/../vendor/autoload.php';
+putenv('TMPDIR=/tmp/storage');
+$_ENV['TMPDIR'] = '/tmp/storage';
+$_SERVER['TMPDIR'] = '/tmp/storage';
 
-$app = require_once __DIR__ . '/../bootstrap/app.php';
-if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
-    $app->useStoragePath('/tmp/storage');
-}
+putenv('TMP=/tmp/storage');
+$_ENV['TMP'] = '/tmp/storage';
+$_SERVER['TMP'] = '/tmp/storage';
 
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+putenv('TEMP=/tmp/storage');
+$_ENV['TEMP'] = '/tmp/storage';
+$_SERVER['TEMP'] = '/tmp/storage';
 
-$response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
-);
+putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+$_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+$_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 
-$response->send();
-
-$kernel->terminate($request, $response);
+// Forward Vercel requests to public/index.php
+require __DIR__ . '/../public/index.php';

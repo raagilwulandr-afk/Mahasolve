@@ -1,11 +1,21 @@
 <?php
 
+ini_set('session.save_path', '/tmp/storage/framework/sessions');
+ini_set('upload_tmp_dir', '/tmp/storage');
+
+set_error_handler(function ($errno, $errstr) {
+    if (str_contains($errstr, 'tempnam')) {
+        return true;
+    }
+    return false;
+});
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -25,3 +35,23 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*'),
         );
     })->create();
+
+if (is_dir('/tmp')) {
+    $storageDirs = [
+        '/tmp/storage/framework/views',
+        '/tmp/storage/framework/sessions',
+        '/tmp/storage/framework/cache/data',
+        '/tmp/storage/logs',
+        '/tmp/bootstrap/cache',
+    ];
+
+    foreach ($storageDirs as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+    }
+
+    $app->useStoragePath('/tmp/storage');
+}
+
+return $app;
