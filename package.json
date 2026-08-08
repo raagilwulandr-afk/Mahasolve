@@ -2,6 +2,6 @@
   "name": "rpl-mahasolve",
   "private": true,
   "scripts": {
-    "build": "composer install --working-dir=mahasolve --no-dev --optimize-autoloader"
+    "build": "cd mahasolve && npm install && npm run build"
   }
 }
