@@ -1,20 +1,37 @@
-# Exclude heavy archives and non-runtime directories from serverless function bundle
+# Ignore entire provider directory and duplicate projects
+provider
+provider/**
+provider/*
+
+# Ignore all zip files and archives
 mahasolve.zip
 *.zip
-provider/
+**/*.zip
 
-# Exclude node_modules (needed for build step, not for PHP lambda runtime)
+# Ignore all node_modules everywhere
 node_modules
-mahasolve/node_modules
+node_modules/**
+**/node_modules/**
+mahasolve/node_modules/**
 
-# Exclude logs and cache
+# Ignore dev-only vendor dependencies & heavy binaries to keep lambda bundle lightweight (<15MB)
+mahasolve/vendor/laravel/pint/**
+mahasolve/vendor/fakerphp/**
+mahasolve/vendor/phpunit/**
+mahasolve/vendor/mockery/**
+mahasolve/vendor/psy/**
+mahasolve/vendor/phar-io/**
+mahasolve/vendor/sebastian/**
+mahasolve/vendor/theseer/**
+mahasolve/vendor/myclabs/**
+
+# Ignore dev logs, cache, tests, git
 *.log
-mahasolve/storage/logs/
-mahasolve/storage/framework/cache/
-mahasolve/storage/framework/sessions/
-mahasolve/storage/framework/views/
-
-# Exclude development files
-.git
-.github
-mahasolve/tests
+**/*.log
+mahasolve/storage/logs/**
+mahasolve/storage/framework/cache/**
+mahasolve/storage/framework/sessions/**
+mahasolve/storage/framework/views/**
+mahasolve/tests/**
+.git/**
+.github/**
