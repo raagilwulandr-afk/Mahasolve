@@ -8,14 +8,20 @@ mahasolve.zip
 *.zip
 **/*.zip
 
-# Ignore node_modules (only needed for frontend build step, not PHP lambda runtime)
+# Ignore node_modules
 node_modules
 node_modules/**
 **/node_modules/**
 mahasolve/node_modules/**
 
-# Ignore heavy dev-only standalone binary (15.8MB)
+# Ignore heavy dev packages & binaries (saved 32MB+)
 mahasolve/vendor/laravel/pint/**
+mahasolve/vendor/fakerphp/**
+mahasolve/vendor/phpunit/**
+mahasolve/vendor/psy/**
+mahasolve/vendor/mockery/**
+mahasolve/vendor/phar-io/**
+mahasolve/vendor/sebastian/**
 
 # Ignore logs, cache, tests, git
 *.log
