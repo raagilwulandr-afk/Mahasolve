@@ -34,20 +34,29 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+        $exceptions->reportable(function (\Throwable $e) {
+            if (str_contains($e->getMessage(), 'tempnam')) {
+                return false;
+            }
+        });
     })->create();
 
 if (is_dir('/tmp')) {
-    $storageDirs = [
+    $dirs = [
+        '/tmp/storage',
+        '/tmp/storage/framework',
         '/tmp/storage/framework/views',
         '/tmp/storage/framework/sessions',
+        '/tmp/storage/framework/cache',
         '/tmp/storage/framework/cache/data',
         '/tmp/storage/logs',
+        '/tmp/bootstrap',
         '/tmp/bootstrap/cache',
     ];
 
-    foreach ($storageDirs as $dir) {
+    foreach ($dirs as $dir) {
         if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
+            @mkdir($dir, 0777, true);
         }
     }
 
