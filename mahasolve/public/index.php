@@ -42,7 +42,11 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 }
 
 // Register the Composer autoloader...
-require __DIR__.'/../vendor/autoload.php';
+if (file_exists(__DIR__.'/../vendor/autoload.php')) {
+    require __DIR__.'/../vendor/autoload.php';
+} elseif (file_exists(__DIR__.'/../../vendor/autoload.php')) {
+    require __DIR__.'/../../vendor/autoload.php';
+}
 
 // Bootstrap Laravel
 /** @var Application $app */
