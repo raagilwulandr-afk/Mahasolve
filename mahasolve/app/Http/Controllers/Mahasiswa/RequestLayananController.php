@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRequestLayananRequest;
+use App\Models\Negosiasi;
+use App\Models\Provider;
 use App\Models\RequestLayanan;
 use Illuminate\Http\Request;
 
 class RequestLayananController extends Controller
 {
-    // Redirect ke halaman Order (list request sudah tergabung di sana lewat riwayat negosiasi)
     public function index()
     {
         return redirect()->route('pesanan.index');
@@ -18,26 +20,16 @@ class RequestLayananController extends Controller
     {
         $selectedProvider = null;
         if ($request->filled('provider')) {
-            $selectedProvider = \App\Models\Provider::with('user')->find($request->query('provider'));
+            $selectedProvider = Provider::with('user')->find($request->query('provider'));
         }
         $selectedKategori = $request->query('kategori', 'Antar Jemput');
 
         return view('mahasiswa.request.create', compact('selectedProvider', 'selectedKategori'));
     }
 
-    // PB-01: Identifikasi Kebutuhan Layanan
-    public function store(Request $request)
+    public function store(StoreRequestLayananRequest $request)
     {
-        $validated = $request->validate([
-            'detail_kebutuhan' => 'required|string',
-            'kategori' => 'required|string|max:100',
-            'harga_awal' => 'nullable|numeric|min:0',
-            'deadline' => 'nullable|date|after:today',
-            'kriteria_output' => 'nullable|string',
-            'id_provider' => 'nullable|exists:provider,id_provider',
-            'lokasi_jemput' => 'nullable|string|max:255',
-            'lokasi_tujuan' => 'nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         if ($request->filled('lokasi_jemput') || $request->filled('lokasi_tujuan')) {
             $lokasiText = "\n[Lokasi Jemput: " . ($request->lokasi_jemput ?: '-') . " | Tujuan: " . ($request->lokasi_tujuan ?: '-') . "]";
@@ -51,7 +43,7 @@ class RequestLayananController extends Controller
         $requestLayanan = RequestLayanan::create($validated);
 
         if (!empty($validated['id_provider'])) {
-            \App\Models\Negosiasi::create([
+            Negosiasi::create([
                 'id_request' => $requestLayanan->id_request,
                 'id_provider' => $validated['id_provider'],
                 'harga_tawaran' => $validated['harga_awal'] ?? 10000,
@@ -88,20 +80,12 @@ class RequestLayananController extends Controller
         return view('mahasiswa.request.edit', compact('requestLayanan'));
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreRequestLayananRequest $request, $id)
     {
         $requestLayanan = RequestLayanan::findOrFail($id);
         $this->authorizeOwner($requestLayanan);
 
-        $validated = $request->validate([
-            'detail_kebutuhan' => 'required|string',
-            'kategori' => 'required|string|max:100',
-            'harga_awal' => 'nullable|numeric|min:0',
-            'deadline' => 'nullable|date|after:today',
-            'kriteria_output' => 'nullable|string',
-        ]);
-
-        $requestLayanan->update($validated);
+        $requestLayanan->update($request->validated());
 
         return redirect()
             ->route('mahasiswa.request.show', $requestLayanan->id_request)

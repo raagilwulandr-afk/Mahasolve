@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\RequestStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class RequestLayanan extends Model
@@ -23,6 +25,7 @@ class RequestLayanan extends Model
     protected $casts = [
         'deadline' => 'date',
         'tanggal_request' => 'datetime',
+        'status_request' => RequestStatus::class,
     ];
 
     public function mahasiswa()
@@ -33,5 +36,10 @@ class RequestLayanan extends Model
     public function negosiasi()
     {
         return $this->hasMany(Negosiasi::class, 'id_request', 'id_request');
+    }
+
+    public function scopeOpen(Builder $query): Builder
+    {
+        return $query->where('status_request', RequestStatus::Open->value);
     }
 }

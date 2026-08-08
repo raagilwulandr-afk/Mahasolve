@@ -21,7 +21,6 @@ class PesananController extends Controller
     public function index(Request $httpRequest)
     {
         $user = auth()->user();
-        $user = auth()->user();
         $filterStatus = $httpRequest->query('status', 'semua');
 
         $semuaNegosiasi = Negosiasi::whereHas('request', fn ($q) => $q->where('id_user', $user->id_user))
@@ -48,7 +47,7 @@ class PesananController extends Controller
         ]);
 
         $semuaPesanan = Pesanan::whereHas('negosiasi.request', fn ($q) => $q->where('id_user', $user->id_user))
-            ->with('negosiasi.provider.user', 'negosiasi.request', 'pembayaran', 'ratingReview')
+            ->with(['negosiasi.provider.user', 'negosiasi.request', 'pembayaran', 'ratingReview', 'detailPekerjaan', 'trackingPesanan'])
             ->get();
 
         $pesananList = $semuaPesanan->map(fn ($p) => (object) [
@@ -135,10 +134,7 @@ class PesananController extends Controller
 
     public function show($id)
     {
-        $pesanan = Pesanan::find($id);
-        if (!$pesanan) {
-            $pesanan = Pesanan::where('id_negosiasi', $id)->first() ?? Pesanan::latest()->first();
-        }
+        $pesanan = Pesanan::find($id) ?? Pesanan::where('id_negosiasi', $id)->first();
 
         if (!$pesanan) {
             return redirect()->route('pesanan.index')->with('error', 'Pesanan tidak ditemukan.');
@@ -189,10 +185,6 @@ class PesananController extends Controller
 
     private function authorizeParticipant(Pesanan $pesanan): void
     {
-        $user = auth()->user();
-        $isMahasiswaOwner = (int) $pesanan->negosiasi->request->id_user === (int) $user->id_user;
-        $isProviderOwner = $user->provider && (int) $pesanan->negosiasi->id_provider === (int) $user->provider->id_provider;
-
-        abort_unless($isMahasiswaOwner || $isProviderOwner, 403);
+        $this->authorize('view', $pesanan);
     }
 }

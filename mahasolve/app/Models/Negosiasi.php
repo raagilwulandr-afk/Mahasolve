@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\NegotiationStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Negosiasi extends Model
@@ -18,6 +20,10 @@ class Negosiasi extends Model
         'status_negosiasi',
     ];
 
+    protected $casts = [
+        'status_negosiasi' => NegotiationStatus::class,
+    ];
+
     public function request()
     {
         return $this->belongsTo(RequestLayanan::class, 'id_request', 'id_request');
@@ -31,5 +37,17 @@ class Negosiasi extends Model
     public function pesanan()
     {
         return $this->hasOne(Pesanan::class, 'id_negosiasi', 'id_negosiasi');
+    }
+
+    public function scopePending(Builder $query): Builder
+    {
+        return $query->where('status_negosiasi', NegotiationStatus::Pending->value);
+    }
+
+    public function scopeThread(Builder $query, int $requestId, int $providerId): Builder
+    {
+        return $query->where('id_request', $requestId)
+            ->where('id_provider', $providerId)
+            ->orderBy('created_at', 'asc');
     }
 }

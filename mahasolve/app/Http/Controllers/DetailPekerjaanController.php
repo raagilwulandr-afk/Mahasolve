@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetailPekerjaan;
 use App\Models\Pesanan;
+use App\Services\TrackingService;
 use Illuminate\Http\Request;
 
 class DetailPekerjaanController extends Controller
 {
-    // PB-06: Mahasiswa menyerahkan detail pekerjaan
+    public function __construct(
+        protected TrackingService $trackingService
+    ) {}
+
     public function store(Request $request, Pesanan $pesanan)
     {
         $data = $request->validate([
@@ -18,26 +21,14 @@ class DetailPekerjaanController extends Controller
             'format_hasil' => 'nullable|string|max:50',
         ]);
 
-        $dokumenPath = $request->hasFile('dokumen')
-            ? $request->file('dokumen')->store('dokumen', 'public')
-            : null;
+        $this->trackingService->submitDetailPekerjaan(
+            pesanan: $pesanan,
+            instruksiPengerjaan: $data['instruksi_pengerjaan'],
+            formatHasil: $data['format_hasil'] ?? null,
+            dokumenFile: $request->file('dokumen'),
+            referensiFile: $request->file('referensi')
+        );
 
-        $referensiPath = $request->hasFile('referensi')
-            ? $request->file('referensi')->store('referensi', 'public')
-            : null;
-
-        DetailPekerjaan::create([
-            'id_pesanan' => $pesanan->id_pesanan,
-            'dokumen' => $dokumenPath,
-            'instruksi_pengerjaan' => $data['instruksi_pengerjaan'],
-            'referensi' => $referensiPath,
-            'format_hasil' => $data['format_hasil'] ?? null,
-            'tanggal_upload' => now(),
-            'status' => 'lengkap',
-        ]);
-
-        $pesanan->update(['status_pesanan' => 'dikerjakan']);
-
-        return back()->with('status', 'Detail pekerjaan berhasil dikirim ke provider.');
+        return back()->with('success', 'Detail pekerjaan berhasil dikirim ke provider.');
     }
 }

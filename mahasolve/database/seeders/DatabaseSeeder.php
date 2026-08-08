@@ -8,8 +8,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([
-            MahasolveDummySeeder::class,
-        ]);
+        // Supabase 100% mode: seed data dihapus agar database bersih dan menggunakan Supabase secara langsung.
     }
 }

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
-use App\Models\TrackingPesanan;
+use App\Services\TrackingService;
 use Illuminate\Http\Request;
 
 class TrackingPesananController extends Controller
 {
-    // PB-07: Provider memberi update progres / draft, mahasiswa memberi klarifikasi/revisi
+    public function __construct(
+        protected TrackingService $trackingService
+    ) {}
+
     public function store(Request $request, Pesanan $pesanan)
     {
         $data = $request->validate([
@@ -16,17 +19,12 @@ class TrackingPesananController extends Controller
             'file_progress' => 'nullable|file|max:10240',
         ]);
 
-        $filePath = $request->hasFile('file_progress')
-            ? $request->file('file_progress')->store('progress', 'public')
-            : null;
+        $this->trackingService->addProgressLog(
+            pesanan: $pesanan,
+            statusPengerjaan: $data['status_pengerjaan'],
+            fileProgress: $request->file('file_progress')
+        );
 
-        TrackingPesanan::create([
-            'id_pesanan' => $pesanan->id_pesanan,
-            'status_pengerjaan' => $data['status_pengerjaan'],
-            'file_progress' => $filePath,
-            'created_at' => now(),
-        ]);
-
-        return back()->with('status', 'Update progres berhasil dikirim.');
+        return back()->with('success', 'Update progres berhasil dikirim.');
     }
 }

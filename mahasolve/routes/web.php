@@ -16,6 +16,12 @@ use App\Http\Controllers\Provider\ReviewController as ProviderReviewController;
 use Illuminate\Support\Facades\Route;
 
 // --- PUBLIC ROUTES ---
+Route::get('/favicon.ico', function () {
+    return response()->file(public_path('favicon.ico'), [
+        'Content-Type' => 'image/x-icon',
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+});
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // --- PROFILE ROUTES ---
@@ -87,12 +93,10 @@ Route::middleware(['auth', 'role:provider'])->group(function () {
     Route::post('/order/{id}/counter-nego', [ProviderOrderController::class, 'counterNego'])->name('order.counter');
     Route::post('/order/{id}/accept', [ProviderOrderController::class, 'acceptNego'])->name('order.accept');
     Route::post('/order/{id}/reject', [ProviderOrderController::class, 'rejectNego'])->name('order.reject');
-    Route::post('/order/{id}/cancel', [ProviderOrderController::class, 'rejectNego'])->name('order.cancel');
     Route::post('/order/{id}/progress', [ProviderOrderController::class, 'updateProgress'])->name('order.progress');
 
     // Review Provider
     Route::get('/provider/review', [ProviderReviewController::class, 'index'])->name('provider.review');
-    Route::get('/provider-review', [ProviderReviewController::class, 'index'])->name('review');
 
     // Provider Request Routes & Order Complete Action
     Route::get('/provider/requests', function () {

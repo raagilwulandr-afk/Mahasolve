@@ -3,25 +3,16 @@
 namespace App\Http\Controllers\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Layanan;
-use App\Models\Provider;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $provider = $user->provider;
-
-        if (!$provider) {
-            $provider = Provider::create([
-                'id_user' => $user->id_user,
-                'rating' => 0.0,
-                'detail_provider' => 'Provider Jasa Mahasolve',
-            ]);
-        }
+        $user = auth()->user();
+        $provider = $user->getOrCreateProvider();
 
         $services = Layanan::where('id_provider', $provider->id_provider)->latest()->get();
         $totalLayanan = $services->count();
@@ -39,77 +30,53 @@ class ServiceController extends Controller
         ));
     }
 
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
-        $request->validate([
-            'nama_layanan' => 'required|string|max:150',
-            'kategori' => 'required|string|max:100',
-            'harga' => 'required|numeric|min:0',
-            'deskripsi' => 'nullable|string',
-            'estimasi_pengerjaan' => 'nullable|string|max:50',
-        ]);
-
-        $user = Auth::user();
-        $provider = $user->provider;
-
-        if (!$provider) {
-            $provider = Provider::create([
-                'id_user' => $user->id_user,
-                'rating' => 0.0,
-                'detail_provider' => 'Provider Jasa Mahasolve',
-            ]);
-        }
+        $user = auth()->user();
+        $provider = $user->getOrCreateProvider();
+        $validated = $request->validated();
 
         Layanan::create([
             'id_provider' => $provider->id_provider,
-            'nama_layanan' => $request->nama_layanan,
-            'kategori' => $request->kategori,
-            'harga' => $request->harga,
-            'deskripsi' => $request->deskripsi,
-            'estimasi_pengerjaan' => $request->estimasi_pengerjaan ?? '1 hari',
+            'nama_layanan' => $validated['nama_layanan'],
+            'kategori' => $validated['kategori'],
+            'harga' => $validated['harga'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'estimasi_pengerjaan' => $validated['estimasi_pengerjaan'] ?? '1 hari',
         ]);
 
         return back()->with('success', 'Layanan berhasil ditambahkan.');
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateServiceRequest $request, $id)
     {
-        $request->validate([
-            'nama_layanan' => 'required|string|max:150',
-            'kategori' => 'required|string|max:100',
-            'harga' => 'required|numeric|min:0',
-            'deskripsi' => 'nullable|string',
+        $user = auth()->user();
+        $provider = $user->getOrCreateProvider();
+        $validated = $request->validated();
+
+        $layanan = Layanan::where('id_provider', $provider->id_provider)
+            ->where('id_layanan', $id)
+            ->firstOrFail();
+
+        $layanan->update([
+            'nama_layanan' => $validated['nama_layanan'],
+            'kategori' => $validated['kategori'],
+            'harga' => $validated['harga'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
         ]);
-
-        $user = Auth::user();
-        $provider = $user->provider;
-
-        if ($provider) {
-            $layanan = Layanan::where('id_provider', $provider->id_provider)
-                ->where('id_layanan', $id)
-                ->firstOrFail();
-
-            $layanan->update([
-                'nama_layanan' => $request->nama_layanan,
-                'kategori' => $request->kategori,
-                'harga' => $request->harga,
-                'deskripsi' => $request->deskripsi,
-            ]);
-        }
 
         return back()->with('success', 'Layanan berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        $user = Auth::user();
-        $provider = $user->provider;
+        $user = auth()->user();
+        $provider = $user->getOrCreateProvider();
 
-        if ($provider) {
-            Layanan::where('id_provider', $provider->id_provider)
-                ->where('id_layanan', $id)
-                ->delete();
-        }
+        Layanan::where('id_provider', $provider->id_provider)
+            ->where('id_layanan', $id)
+            ->firstOrFail()
+            ->delete();
 
         return back()->with('success', 'Layanan berhasil dihapus.');
     }

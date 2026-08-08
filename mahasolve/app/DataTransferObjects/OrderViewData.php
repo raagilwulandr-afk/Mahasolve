@@ -1,0 +1,60 @@
+<?php
+
+namespace App\DataTransferObjects;
+
+use App\Models\Negosiasi;
+
+class OrderViewData
+{
+    public static function fromNegotiation(Negosiasi $nego): array
+    {
+        $req = $nego->request;
+        $mhs = $req->mahasiswa;
+        $pesanan = $nego->pesanan;
+
+        $statusText = match ($nego->status_negosiasi) {
+            'disepakati' => $pesanan ? ucfirst(str_replace('_', ' ', $pesanan->status_pesanan)) : 'Menunggu Pengerjaan',
+            'ditawar_ulang' => 'Penawaran Balik',
+            'ditolak' => 'Ditolak',
+            default => 'Pending',
+        };
+
+        $chats = Negosiasi::where('id_request', $nego->id_request)
+            ->where('id_provider', $nego->id_provider)
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(fn ($chat) => ChatMessageData::fromModel($chat)->toArray());
+
+        return [
+            'id' => $nego->id_negosiasi,
+            'raw_id' => $nego->id_negosiasi,
+            'id_request' => $nego->id_request,
+            'id_pesanan' => $pesanan?->id_pesanan,
+            'customerName' => $mhs->username ?? 'Mahasiswa',
+            'category' => $req->kategori ?? 'Umum',
+            'currentPrice' => $req->harga_awal ?? $nego->harga_tawaran,
+            'customerOffer' => $nego->harga_tawaran,
+            'description' => $req->detail_kebutuhan ?? 'Tidak ada catatan tambahan.',
+            'avatarBg' => 'bg-indigo-600',
+            'customer' => [
+                'name' => $mhs->username ?? 'Mahasiswa',
+                'email' => $mhs->email ?? 'mahasiswa@student.ac.id',
+                'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($mhs->username ?? 'M'),
+            ],
+            'service' => [
+                'nama_layanan' => $req->detail_kebutuhan ?? 'Request Jasa',
+                'kategori' => $req->kategori ?? 'Umum',
+                'title' => $req->detail_kebutuhan ?? 'Request Jasa',
+                'category' => $req->kategori ?? 'Umum',
+                'price' => $req->harga_awal ?? $nego->harga_tawaran,
+            ],
+            'status' => $statusText,
+            'harga_tawaran' => $nego->harga_tawaran,
+            'harga_awal' => $req->harga_awal ?? $nego->harga_tawaran,
+            'negotiation_price' => $nego->harga_tawaran,
+            'notes' => $req->detail_kebutuhan ?? 'Tidak ada catatan tambahan.',
+            'deskripsi_kebutuhan' => $req->detail_kebutuhan ?? 'Tidak ada deskripsi',
+            'chats' => $chats,
+        ];
+    }
+}

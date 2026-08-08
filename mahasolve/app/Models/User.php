@@ -51,6 +51,16 @@ class User extends Authenticatable
         return $this->role === 'provider';
     }
 
+    // Helper: Ambil atau buat otomatis entri Provider untuk user ini
+    public function getOrCreateProvider(): Provider
+    {
+        return $this->provider ?? Provider::create([
+            'id_user' => $this->id_user,
+            'rating' => 0.0,
+            'detail_provider' => 'Provider Jasa Mahasolve',
+        ]);
+    }
+
     // Alias supaya Auth::user()->name tetap jalan (beberapa view bawaan
     // Laravel Breeze memanggil ->name, sedangkan kolom kita bernama 'username')
     public function getNameAttribute(): string

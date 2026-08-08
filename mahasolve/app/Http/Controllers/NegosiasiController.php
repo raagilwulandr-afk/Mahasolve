@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Negosiasi;
-use App\Models\Pesanan;
 use App\Models\Provider;
 use App\Models\RequestLayanan;
+use App\Services\NegotiationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class NegosiasiController extends Controller
 {
-    // PB-04: Mahasiswa mengajukan permintaan jasa ke provider terpilih dari katalog
-    // -> jadi baris pertama di thread negosiasi (chat)
+    public function __construct(
+        protected NegotiationService $negotiationService
+    ) {}
+
     public function store(Request $request, RequestLayanan $requestLayanan, Provider $provider)
     {
         abort_unless((int) $requestLayanan->id_user === (int) auth()->user()->id_user, 403);
@@ -39,7 +40,6 @@ class NegosiasiController extends Controller
             ->with('success', 'Permintaan berhasil diajukan ke provider, menunggu respon.');
     }
 
-    // Halaman chat: tampilkan seluruh riwayat tawaran (thread) request+provider yang sama
     public function show(Negosiasi $negosiasi)
     {
         $negosiasi->load('request.mahasiswa', 'provider.user', 'pesanan');
@@ -52,7 +52,6 @@ class NegosiasiController extends Controller
 
         $terakhir = $thread->last();
 
-        // Layanan representatif provider ini (untuk kartu "Detail Layanan" di sidebar)
         $layananTerkait = $negosiasi->provider->layanan()
             ->where('kategori', $negosiasi->request->kategori)
             ->orderBy('harga')
@@ -61,7 +60,6 @@ class NegosiasiController extends Controller
         return view('negosiasi.show', compact('negosiasi', 'thread', 'terakhir', 'layananTerkait'));
     }
 
-    // PB-05: Mahasiswa mengirim pesan/tawaran baru (jadi baris baru di thread)
     public function counterOffer(Request $request, Negosiasi $negosiasi)
     {
         $this->authorizeParticipant($negosiasi);
@@ -78,7 +76,6 @@ class NegosiasiController extends Controller
             'detail_negosiasi' => 'nullable|string',
         ]);
 
-        // Tawaran lama yang masih pending otomatis dianggap "ditawar ulang"
         if ($terakhir->status_negosiasi === 'pending') {
             $terakhir->update(['status_negosiasi' => 'ditawar_ulang']);
         }
@@ -99,33 +96,13 @@ class NegosiasiController extends Controller
         return redirect()->route('negosiasi.show', $negosiasi->id_negosiasi);
     }
 
-    // Setuju dengan tawaran terakhir di thread -> otomatis buat pesanan (PB-05 -> PB-06)
     public function accept(Negosiasi $negosiasi)
     {
         $this->authorizeParticipant($negosiasi);
-
-        $terakhir = Negosiasi::where('id_request', $negosiasi->id_request)
-            ->where('id_provider', $negosiasi->id_provider)
-            ->latest('created_at')
-            ->first();
-
-        abort_if($terakhir->status_negosiasi === 'disepakati', 400, 'Sudah disepakati sebelumnya.');
-
-        DB::transaction(function () use ($terakhir, $negosiasi) {
-            $terakhir->update(['status_negosiasi' => 'disepakati']);
-
-            $pesanan = Pesanan::create([
-                'id_negosiasi' => $terakhir->id_negosiasi,
-                'harga_final' => $terakhir->harga_tawaran,
-                'tanggal_pesanan' => now(),
-                'status_pesanan' => 'menunggu_pengerjaan',
-            ]);
-
-            $negosiasi->request->update(['status_request' => 'diproses']);
-        });
+        $pesanan = $this->negotiationService->acceptNegotiation($negosiasi);
 
         return redirect()
-            ->route('pesanan.show', ['pesanan' => $terakhir->pesanan->id_pesanan, 'pay' => 1])
+            ->route('pesanan.show', ['pesanan' => $pesanan->id_pesanan, 'pay' => 1])
             ->with('success', 'Negosiasi disetujui! Silakan lanjutkan ke pembayaran.');
     }
 

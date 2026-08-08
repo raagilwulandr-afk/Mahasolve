@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Pesanan extends Model
@@ -18,6 +20,7 @@ class Pesanan extends Model
 
     protected $casts = [
         'tanggal_pesanan' => 'datetime',
+        'status_pesanan' => OrderStatus::class,
     ];
 
     public function negosiasi()
@@ -45,24 +48,48 @@ class Pesanan extends Model
         return $this->hasOne(RatingReview::class, 'id_pesanan', 'id_pesanan');
     }
 
-    // Helper: mahasiswa pemilik pesanan ini (lewat negosiasi -> request -> user)
     public function mahasiswa()
     {
         return $this->negosiasi->request->mahasiswa ?? null;
     }
 
-    // Helper: provider pengerjaan pesanan ini
     public function provider()
     {
         return $this->negosiasi->provider ?? null;
     }
 
-    // Boleh diisi review kalau sudah selesai & pembayaran dikonfirmasi
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->whereIn('status_pesanan', [
+            OrderStatus::MenungguPengerjaan->value,
+            OrderStatus::Dikerjakan->value,
+            OrderStatus::Revisi->value,
+        ]);
+    }
+
+    public function scopeCompleted(Builder $query): Builder
+    {
+        return $query->where('status_pesanan', OrderStatus::Selesai->value);
+    }
+
+    public function scopeForStudent(Builder $query, int $userId): Builder
+    {
+        return $query->whereHas('negosiasi.request', fn ($q) => $q->where('id_user', $userId));
+    }
+
+    public function scopeForProvider(Builder $query, int $providerId): Builder
+    {
+        return $query->whereHas('negosiasi', fn ($q) => $q->where('id_provider', $providerId));
+    }
+
     public function bolehDireview(): bool
     {
-        return $this->status_pesanan === 'selesai'
+        $statusVal = is_object($this->status_pesanan) ? $this->status_pesanan->value : $this->status_pesanan;
+        $statusBayarVal = $this->pembayaran ? (is_object($this->pembayaran->status_bayar) ? $this->pembayaran->status_bayar->value : $this->pembayaran->status_bayar) : null;
+
+        return $statusVal === 'selesai'
             && $this->pembayaran
-            && $this->pembayaran->status_bayar === 'dikonfirmasi'
+            && $statusBayarVal === 'dikonfirmasi'
             && !$this->ratingReview;
     }
 }

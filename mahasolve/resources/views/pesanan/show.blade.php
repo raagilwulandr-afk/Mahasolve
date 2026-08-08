@@ -16,6 +16,22 @@
         </div>
     </div>
 
+    @if ($errors->any())
+        <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl flex items-start gap-3 shadow-sm">
+            <svg class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div>
+                <h4 class="text-xs font-bold text-rose-900 uppercase tracking-wider font-display">Terdapat Kesalahan Input</h4>
+                <ul class="mt-1 list-disc list-inside text-xs text-rose-700 space-y-0.5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
     <!-- HERO ORDER CARD BANNER -->
     <div class="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-3xl p-8 text-white shadow-xl shadow-indigo-500/10 relative overflow-hidden">
         <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
@@ -27,9 +43,7 @@
         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div class="space-y-2">
                 <div class="flex items-center gap-3">
-                    <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider">
-                        STATUS: {{ strtoupper(str_replace('_', ' ', $pesanan->status_pesanan)) }}
-                    </span>
+                    <x-status-badge :status="$pesanan->status_pesanan" />
                     <span class="text-xs text-indigo-100">Dibuat {{ $pesanan->tanggal_pesanan?->format('d M Y') ?? 'Baru saja' }}</span>
                 </div>
                 <h1 class="text-2xl font-extrabold font-display leading-tight">
@@ -367,13 +381,7 @@
 
                 @if ($pesanan->ratingReview)
                     <div class="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2 text-center">
-                        <div class="flex items-center justify-center gap-1 text-amber-400">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <svg class="w-4 h-4 {{ $i <= $pesanan->ratingReview->rate ? 'fill-current text-amber-400' : 'text-slate-200 fill-current' }}" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                            @endfor
-                        </div>
+                        <x-rating-stars :rating="$pesanan->ratingReview->rate" class="justify-center" />
                         <p class="text-xs text-slate-700 italic">"{{ $pesanan->ratingReview->review }}"</p>
                     </div>
                 @elseif ($pesanan->bolehDireview())
