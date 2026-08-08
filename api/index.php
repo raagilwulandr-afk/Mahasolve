@@ -59,5 +59,13 @@ $app = require_once __DIR__ . '/../mahasolve/bootstrap/app.php';
 // 6. Explicitly set storage path to /tmp/storage
 $app->useStoragePath($tmpStorage);
 
-// 7. Handle incoming HTTP request
-$app->handleRequest(\Illuminate\Http\Request::capture());
+// 7. Handle incoming HTTP request via Http Kernel
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
+);
+
+$response->send();
+
+$kernel->terminate($request, $response);
