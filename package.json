@@ -1,0 +1,7 @@
+{
+  "name": "rpl-mahasolve",
+  "private": true,
+  "scripts": {
+    "build": "composer install --working-dir=mahasolve --no-dev --optimize-autoloader"
+  }
+}
