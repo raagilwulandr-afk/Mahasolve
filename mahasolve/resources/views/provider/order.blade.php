@@ -35,6 +35,15 @@
             formatNumber(num) {
                 if (!num) return '0';
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            },
+
+            getStepIndex(status) {
+                if (!status) return 0;
+                const s = status.toLowerCase();
+                if (s === 'selesai') return 3;
+                if (['diproses', 'dikerjakan', 'revisi'].includes(s)) return 2;
+                if (['menunggu_pengerjaan', 'dikonfirmasi'].includes(s)) return 1;
+                return 0;
             }
         };
     }
@@ -148,6 +157,33 @@
                             </div>
                         </div>
 
+                        <!-- VISUAL STEPPER PROGRESS TRACKER FOR PROVIDER -->
+                        <div class="px-6 pt-6">
+                            <div class="flex items-center p-4 bg-slate-50 border border-slate-200/70 rounded-2xl">
+                                <template x-for="(stepLabel, idx) in ['Dipesan', 'Dikonfirmasi', 'Diproses', 'Selesai']" :key="idx">
+                                    <div class="contents">
+                                        <div class="flex flex-col items-center flex-1">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all shadow-xs"
+                                                 :class="getStepIndex(activeOrder.status) >= idx ? 'bg-indigo-600 text-white ring-4 ring-indigo-100' : 'bg-slate-200 text-slate-500'">
+                                                <template x-if="getStepIndex(activeOrder.status) >= idx">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                                    </svg>
+                                                </template>
+                                                <template x-if="getStepIndex(activeOrder.status) < idx">
+                                                    <span x-text="idx + 1"></span>
+                                                </template>
+                                            </div>
+                                            <span class="text-[11px] font-semibold mt-1" :class="getStepIndex(activeOrder.status) >= idx ? 'text-indigo-700 font-bold' : 'text-slate-400'" x-text="stepLabel"></span>
+                                        </div>
+                                        <template x-if="idx < 3">
+                                            <div class="flex-1 h-1 rounded-full -mt-4 mx-1" :class="getStepIndex(activeOrder.status) > idx ? 'bg-indigo-600' : 'bg-slate-200'"></div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
                         <!-- INFO METADATA -->
                         <div class="p-6 space-y-6">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
@@ -200,7 +236,38 @@
                                     </template>
                                 </div>
 
-                                 <!-- FORM BALAS CHAT (Selalu aktif selama pesanan berjalan / tidak dibatalkan) -->
+                                 <!-- QUICK INLINE NEGO PRICE COUNTER-OFFER FORM (Nego Langsung In-Chat) -->
+                                <template x-if="activeOrder.status === 'Negosiasi'">
+                                    <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/counter-nego'" method="POST" class="p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 mb-3">
+                                        @csrf
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5 font-display">
+                                                <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 0 0118 0z"/>
+                                                </svg>
+                                                Tawar Harga Balik Ke Mahasiswa
+                                            </span>
+                                            <span class="text-[10px] text-amber-700 font-semibold" x-text="'Tawaran Mahasiswa: Rp' + formatNumber(activeOrder.customerOffer)"></span>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2">
+                                            <div class="relative flex-1">
+                                                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                                                <input type="number" name="harga_tawaran" required :value="activeOrder.currentPrice" placeholder="Nominal tawaran..."
+                                                    class="w-full pl-9 pr-3 py-2 bg-white border border-amber-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                            </div>
+                                            <input type="text" name="pesan" placeholder="Pesan nego (opsional)..."
+                                                class="flex-1 px-3 py-2 bg-white border border-amber-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                            <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer whitespace-nowrap flex items-center justify-center gap-1.5">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                                </svg>
+                                                Kirim Tawaran
+                                            </button>
+                                        </div>
+                                    </form>
+                                </template>
+
+                                <!-- FORM BALAS CHAT STANDARD (Selalu aktif selama pesanan berjalan / tidak dibatalkan) -->
                                 <template x-if="activeOrder.status !== 'Ditolak' && activeOrder.status !== 'Dibatalkan'">
                                     <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/chat'" method="POST" class="flex gap-2 pt-2 border-t border-slate-100">
                                         @csrf
@@ -210,7 +277,7 @@
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                             </svg>
-                                            Kirim
+                                            Kirim Chat
                                         </button>
                                     </form>
                                 </template>

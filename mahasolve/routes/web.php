@@ -87,6 +87,7 @@ Route::middleware(['auth', 'role:provider'])->group(function () {
     Route::post('/order/{id}/counter-nego', [ProviderOrderController::class, 'counterNego'])->name('order.counter');
     Route::post('/order/{id}/accept', [ProviderOrderController::class, 'acceptNego'])->name('order.accept');
     Route::post('/order/{id}/reject', [ProviderOrderController::class, 'rejectNego'])->name('order.reject');
+    Route::post('/order/{id}/cancel', [ProviderOrderController::class, 'rejectNego'])->name('order.cancel');
     Route::post('/order/{id}/progress', [ProviderOrderController::class, 'updateProgress'])->name('order.progress');
 
     // Review Provider

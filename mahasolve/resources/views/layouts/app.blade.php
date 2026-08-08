@@ -276,6 +276,7 @@
         </nav>
 
         <main class="max-w-[1280px] mx-auto px-6 py-8">
+            <x-breadcrumb />
 
             @if (session('success'))
                 <div class="mb-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-3.5 text-xs font-bold flex items-center justify-between shadow-sm">
