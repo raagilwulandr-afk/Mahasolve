@@ -200,13 +200,16 @@
                                     </template>
                                 </div>
 
-                                <!-- FORM BALAS CHAT -->
-                                <template x-if="activeOrder.status === 'Negosiasi'">
+                                 <!-- FORM BALAS CHAT (Selalu aktif selama pesanan berjalan / tidak dibatalkan) -->
+                                <template x-if="activeOrder.status !== 'Ditolak' && activeOrder.status !== 'Dibatalkan'">
                                     <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/chat'" method="POST" class="flex gap-2 pt-2 border-t border-slate-100">
                                         @csrf
-                                        <input type="text" name="pesan" required placeholder="Ketik balasan pesan..."
+                                        <input type="text" name="pesan" required placeholder="Ketik balasan pesan atau instruksi ke mahasiswa..."
                                             class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition">
-                                        <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-sm cursor-pointer">
+                                        <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                            </svg>
                                             Kirim
                                         </button>
                                     </form>

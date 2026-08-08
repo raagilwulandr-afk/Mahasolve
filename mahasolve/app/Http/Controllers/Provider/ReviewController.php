@@ -27,7 +27,6 @@ class ReviewController extends Controller
             ->whereHas('negosiasi', function ($q) use ($provider) {
                 $q->where('id_provider', $provider->id_provider);
             })
-            ->whereIn('status_pesanan', ['selesai', 'dibatalkan'])
             ->orderBy('tanggal_pesanan', 'desc')
             ->get();
 
@@ -38,25 +37,37 @@ class ReviewController extends Controller
             return (object) [
                 'id' => $pesanan->id_pesanan,
                 'title' => $pesanan->negosiasi->request->detail_kebutuhan ?? 'Pesanan Jasa Mahasolve',
-                'status' => ucfirst($pesanan->status_pesanan),
+                'status' => match ($pesanan->status_pesanan) {
+                    'selesai' => 'Selesai',
+                    'dibatalkan' => 'Dibatalkan',
+                    default => 'Diproses',
+                },
+                'raw_status' => $pesanan->status_pesanan,
                 'date' => $pesanan->tanggal_pesanan ? $pesanan->tanggal_pesanan->format('d M Y') : now()->format('d M Y'),
                 'category' => $pesanan->negosiasi->request->kategori ?? 'Umum',
                 'customer_name' => $mhs->username ?? 'Mahasiswa',
                 'income' => $pesanan->harga_final ?? 0,
                 'has_review' => $review ? true : false,
-                'rating' => $review->rate ?? 0,
+                'rating' => $review->rate ?? 5,
                 'review_text' => $review->review ?? null,
             ];
         });
 
-        $pesananSelesai = $histories->where('status', 'Selesai');
+        $totalPesananCount = Pesanan::whereHas('negosiasi', function ($q) use ($provider) {
+            $q->where('id_provider', $provider->id_provider);
+        })->count();
+
+        $totalPendapatanSum = Pesanan::whereHas('negosiasi', function ($q) use ($provider) {
+            $q->where('id_provider', $provider->id_provider);
+        })->whereIn('status_pesanan', ['selesai', 'dikerjakan', 'menunggu_pengerjaan', 'revisi'])->sum('harga_final') ?? 0;
+
+        $reviewsWithRate = $histories->where('has_review', true);
+        $avgRating = $reviewsWithRate->count() > 0 ? $reviewsWithRate->avg('rating') : ($provider->rating > 0 ? $provider->rating : 4.9);
 
         $stats = (object) [
-            'total_pesanan' => $pesananSelesai->count(),
-            'total_pendapatan' => $pesananSelesai->sum('income'),
-            'rating' => $pesananSelesai->where('has_review', true)->avg('rating')
-                ? number_format($pesananSelesai->where('has_review', true)->avg('rating'), 1)
-                : number_format($provider->rating ?? 0, 1),
+            'total_pesanan' => $totalPesananCount > 0 ? $totalPesananCount : $histories->count(),
+            'total_pendapatan' => $totalPendapatanSum,
+            'rating' => number_format($avgRating, 1),
         ];
 
         return view('provider.review', compact('histories', 'stats'));
