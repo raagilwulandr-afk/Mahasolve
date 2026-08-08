@@ -6,7 +6,7 @@
     "APP_ENV": "production",
     "APP_KEY": "base64:I/KP3ea6LZ1BdwivRnu8pSiY844KzXsu2ZrYeBB6YXk=",
     "APP_DEBUG": "false",
-    "APP_URL": "https://mahasolve.vercel.app",
+    "APP_URL": "https://mahasolve-seven.vercel.app",
     "APP_LOCALE": "id",
     "APP_FALLBACK_LOCALE": "id",
     "APP_FAKER_LOCALE": "id_ID",

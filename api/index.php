@@ -25,7 +25,7 @@ foreach ($directories as $dir) {
 putenv("APP_STORAGE_PATH={$tmpStorage}");
 putenv("VIEW_COMPILED_PATH={$tmpStorage}/framework/views");
 
-putenv("APP_URL=https://mahasolve.vercel.app");
+putenv("APP_URL=https://mahasolve-seven.vercel.app");
 
 if (!getenv('DB_CONNECTION') || getenv('DB_CONNECTION') === 'sqlite') {
     putenv("DB_CONNECTION=pgsql");
