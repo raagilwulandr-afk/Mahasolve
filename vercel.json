@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "composer install --working-dir=mahasolve --no-dev --optimize-autoloader",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
