@@ -30,6 +30,7 @@ if (!file_exists($tmpSqlite) && file_exists(__DIR__ . '/../mahasolve/database/da
     @copy(__DIR__ . '/../mahasolve/database/database.sqlite', $tmpSqlite);
 }
 
+putenv("APP_URL=https://mahasolve.vercel.app");
 putenv("DB_CONNECTION=sqlite");
 putenv("DB_DATABASE={$tmpSqlite}");
 putenv("SESSION_DRIVER=cookie");
@@ -45,7 +46,10 @@ $app = require_once __DIR__ . '/../mahasolve/bootstrap/app.php';
 // 5. Explicitly set storage path to /tmp/storage
 $app->useStoragePath($tmpStorage);
 
-// 6. Handle incoming HTTP request
+// 6. Force HTTPS scheme for serverless proxy
+\Illuminate\Support\Facades\URL::forceScheme('https');
+
+// 7. Handle incoming HTTP request
 $app->handleRequest(\Illuminate\Http\Request::capture());
 
 

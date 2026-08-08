@@ -31,6 +31,7 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "true",
+    "APP_URL": "https://mahasolve.vercel.app",
     "APP_KEY": "base64:I/KP3ea6LZ1BdwivRnu8pSiY844KzXsu2ZrYeBB6YXk=",
     "DB_CONNECTION": "sqlite",
     "DB_DATABASE": "/tmp/database.sqlite",
