@@ -162,7 +162,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Pesan berhasil terkirim.');
+        return back();
     }
 
     public function counterNego(Request $request, $id)
