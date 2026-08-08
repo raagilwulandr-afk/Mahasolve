@@ -31,6 +31,7 @@
     "MAIL_MAILER": "log",
     "MAIL_FROM_ADDRESS": "no-reply@mahasolve.com",
     "MAIL_FROM_NAME": "Mahasolve",
+    "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
     "VITE_APP_NAME": "Mahasolve"
   },
   "functions": {
