@@ -5,7 +5,7 @@
     "APP_NAME": "Mahasolve",
     "APP_ENV": "production",
     "APP_KEY": "base64:I/KP3ea6LZ1BdwivRnu8pSiY844KzXsu2ZrYeBB6YXk=",
-    "APP_DEBUG": "false",
+    "APP_DEBUG": "true",
     "APP_URL": "https://mahasolve.vercel.app",
     "APP_LOCALE": "id",
     "APP_FALLBACK_LOCALE": "id",
@@ -15,14 +15,14 @@
     "LOG_LEVEL": "info",
     "DB_CONNECTION": "pgsql",
     "DB_HOST": "aws-0-ap-southeast-1.pooler.supabase.com",
-    "DB_PORT": "6543",
+    "DB_PORT": "5432",
     "DB_DATABASE": "postgres",
     "DB_USERNAME": "postgres.mbqpxgbfjrexjmvfypip",
     "DB_PASSWORD": "cDt1DoEy8WZN5XKN",
     "DB_SSLMODE": "require",
     "SESSION_DRIVER": "cookie",
     "SESSION_LIFETIME": "120",
-    "SESSION_ENCRYPT": "true",
+    "SESSION_ENCRYPT": "false",
     "SESSION_PATH": "/",
     "BROADCAST_CONNECTION": "log",
     "FILESYSTEM_DISK": "local",
@@ -34,24 +34,18 @@
     "VITE_APP_NAME": "Mahasolve"
   },
   "functions": {
-    "api/index.php": {
+    "api/*.php": {
       "runtime": "vercel-php@0.7.2"
     }
   },
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "/build/$1",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/build/$1"
     },
     {
       "src": "/images/(.*)",
-      "dest": "/images/$1",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/images/$1"
     },
     {
       "src": "/(favicon.ico|favicon.svg|robots.txt)",
