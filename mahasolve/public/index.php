@@ -44,12 +44,20 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 // Register the Composer autoloader...
 require __DIR__.'/../vendor/autoload.php';
 
-// Bootstrap Laravel and handle the request...
+// Bootstrap Laravel
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 if (is_dir('/tmp')) {
     $app->useStoragePath('/tmp/storage');
 }
+
+// Register top-level error handler AFTER Laravel boots to silence non-fatal tempnam notice
+set_error_handler(function ($severity, $message, $file, $line) {
+    if (str_contains($message, 'tempnam')) {
+        return true;
+    }
+    return false;
+});
 
 $app->handleRequest(Request::capture());
