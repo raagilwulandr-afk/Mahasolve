@@ -21,14 +21,14 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "mahasolve/app/",
-            "Database\\Factories\\": "mahasolve/database/factories/",
-            "Database\\Seeders\\": "mahasolve/database/seeders/"
+            "App\\": ["app/", "mahasolve/app/"],
+            "Database\\Factories\\": ["database/factories/", "mahasolve/database/factories/"],
+            "Database\\Seeders\\": ["database/seeders/", "mahasolve/database/seeders/"]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "mahasolve/tests/"
+            "Tests\\": ["tests/", "mahasolve/tests/"]
         }
     },
     "config": {
