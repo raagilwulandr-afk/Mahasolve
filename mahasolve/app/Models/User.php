@@ -26,7 +26,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'password' => 'hashed',
+        'email_verified_at' => 'datetime',
     ];
 
     // Relasi 1-1: user provider punya satu baris provider
