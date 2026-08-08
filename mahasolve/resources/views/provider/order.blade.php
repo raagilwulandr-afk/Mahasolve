@@ -335,10 +335,10 @@
                                         <div class="flex flex-col sm:flex-row gap-2">
                                             <div class="relative flex-1">
                                                 <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                                                <input type="number" name="harga_tawaran" required :value="activeOrder.currentPrice" placeholder="Nominal tawaran..."
+                                                <input type="number" name="harga_tawaran" required :value="activeOrder.currentPrice" placeholder="Nominal tawaran..." autocomplete="off"
                                                     class="w-full pl-9 pr-3 py-2 bg-white border border-amber-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
                                             </div>
-                                            <input type="text" name="pesan" placeholder="Pesan nego (opsional)..."
+                                            <input type="text" name="pesan" placeholder="Pesan nego (opsional)..." autocomplete="off"
                                                 class="flex-1 px-3 py-2 bg-white border border-amber-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
                                             <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer whitespace-nowrap flex items-center justify-center gap-1.5">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -380,7 +380,7 @@
 
                                             <div>
                                                 <label class="block text-xs font-semibold text-slate-700 mb-1">Pesan Progress / Catatan Hasil</label>
-                                                <input type="text" name="pesan_progress" required placeholder="Contoh: Draf pengerjaan 100% selesai, silakan cek berkas terlampir."
+                                                <input type="text" name="pesan_progress" autocomplete="off" required placeholder="Contoh: Draf pengerjaan 100% selesai, silakan cek berkas terlampir."
                                                     class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-indigo-500">
                                             </div>
 
@@ -391,7 +391,7 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Link Google Drive / Dropbox</label>
-                                                    <input type="url" name="link_drive" placeholder="https://drive.google.com/file/d/..."
+                                                    <input type="url" name="link_drive" placeholder="https://drive.google.com/file/d/..." autocomplete="off"
                                                         class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-indigo-500">
                                                 </div>
                                             </div>
@@ -410,7 +410,7 @@
                                 <template x-if="activeOrder.status !== 'Ditolak' && activeOrder.status !== 'Dibatalkan'">
                                     <form @submit.prevent="sendChatMessage($event)" :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/chat'" method="POST" class="flex gap-2 pt-2 border-t border-slate-100">
                                         @csrf
-                                        <input type="text" x-model="chatInputText" name="pesan" required placeholder="Ketik balasan pesan atau instruksi ke mahasiswa..."
+                                        <input type="text" x-model="chatInputText" name="pesan" autocomplete="off" required placeholder="Ketik balasan pesan atau instruksi ke mahasiswa..."
                                             class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition">
                                         <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -145,10 +145,10 @@
                       class="border-t border-[#14162B0E] p-4 {{ $terakhir->dibuat_oleh === 'mahasiswa' ? 'hidden' : '' }}">
                     @csrf
                     <div class="flex gap-2">
-                        <input type="number" id="input_harga_tawaran" name="harga_tawaran" min="0" required placeholder="Harga (Rp)"
+                        <input type="number" id="input_harga_tawaran" name="harga_tawaran" min="0" required placeholder="Harga (Rp)" autocomplete="off"
                                value="{{ $terakhir->harga_tawaran }}"
                                class="w-32 bg-[#EEF1FB80] rounded-full px-4 py-2.5 text-sm focus:outline-none">
-                        <input type="text" id="input_detail_negosiasi" name="detail_negosiasi" placeholder="Tulis pesan..."
+                        <input type="text" id="input_detail_negosiasi" name="detail_negosiasi" placeholder="Tulis pesan..." autocomplete="off"
                                class="flex-1 bg-[#EEF1FB80] rounded-full px-4 py-2.5 text-sm focus:outline-none">
                         <button type="submit" class="w-11 h-11 rounded-full flex items-center justify-center shrink-0 cursor-pointer" style="background:#4F46E5;">
                             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M17 3L2 9l6 2 2 6 7-14z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
