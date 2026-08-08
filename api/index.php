@@ -48,7 +48,11 @@ $_SERVER['SERVER_PORT'] = 443;
 $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
 // 4. Register Composer autoloader
-require __DIR__ . '/../mahasolve/vendor/autoload.php';
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require __DIR__ . '/../vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../mahasolve/vendor/autoload.php')) {
+    require __DIR__ . '/../mahasolve/vendor/autoload.php';
+}
 
 // 5. Bootstrap Laravel application
 $app = require_once __DIR__ . '/../mahasolve/bootstrap/app.php';
