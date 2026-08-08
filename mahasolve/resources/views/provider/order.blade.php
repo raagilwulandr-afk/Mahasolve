@@ -7,6 +7,7 @@
     function orderApp() {
         return {
             openNegoModal: false,
+            showCancelModal: false,
             counterPrice: '',
             counterNote: '',
 
@@ -256,7 +257,7 @@
                                     </div>
 
                                     <template x-if="activeOrder.status !== 'Ditolak'">
-                                        <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/progress'" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+                                        <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/progress'" method="POST" enctype="multipart/form-data" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
                                             @csrf
                                             <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,13 +275,19 @@
                                             </div>
 
                                             <div>
-                                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pesan Progress (opsional)</label>
+                                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pesan Progress / Catatan</label>
                                                 <input type="text" name="pesan_progress" placeholder="Contoh: Draf awal pengerjaan telah selesai 50%..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
                                             </div>
 
-                                            <div>
-                                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link Dokumen / File Deliverable (opsional)</label>
-                                                <input type="text" name="dokumen" placeholder="Contoh: https://drive.google.com/file/d/xyz atau file.pdf" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                <div>
+                                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Upload File Berkas (.pdf, .zip, .docx)</label>
+                                                    <input type="file" name="file_dokumen" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-600 focus:outline-none focus:border-indigo-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Link Google Drive / Dropbox</label>
+                                                    <input type="text" name="dokumen" placeholder="https://drive.google.com/file/d/..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                                </div>
                                             </div>
 
                                             <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer">
@@ -288,13 +295,12 @@
                                             </button>
                                         </form>
 
-                                        <form :action="'{{ url('/order') }}/' + activeOrder.raw_id + '/cancel'" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini secara darurat?');" class="pt-1">
-                                            @csrf
-                                            <button type="submit" class="w-full py-2.5 px-4 border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                        <div class="pt-1">
+                                            <button type="button" @click="showCancelModal = true" class="w-full py-2.5 px-4 border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1.5 cursor-pointer">
                                                 <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                                                 Batalkan Pesanan (Emergency)
                                             </button>
-                                        </form>
+                                        </div>
                                     </template>
                                 </div>
                             </template>
@@ -359,6 +365,34 @@
             </form>
         </div>
     </div>
+    </template>
+
+    <!-- MODAL BATALKAN PESANAN DARURAT -->
+    <template x-teleport="body">
+        <div x-show="showCancelModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4" x-transition.opacity style="display: none;">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl space-y-4" @click.away="showCancelModal = false">
+                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <div class="text-center space-y-1">
+                    <h3 class="font-bold text-slate-900 text-base font-display">Batalkan Pesanan Secara Darurat?</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Tindakan ini akan menghentikan transaksi secara permanen. Pastikan Anda telah menginformasikan alasan pembatalan kepada mahasiswa pemesan.
+                    </p>
+                </div>
+                <form :action="activeOrder ? '{{ url('/order') }}/' + activeOrder.raw_id + '/cancel' : '#'" method="POST" class="flex items-center gap-2 pt-2">
+                    @csrf
+                    <button type="button" @click="showCancelModal = false" class="w-1/2 py-2.5 border border-slate-200 text-xs font-bold text-slate-700 rounded-xl hover:bg-slate-50">
+                        Batal
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer">
+                        Ya, Batalkan Pesanan
+                    </button>
+                </form>
+            </div>
+        </div>
     </template>
 
 </div>

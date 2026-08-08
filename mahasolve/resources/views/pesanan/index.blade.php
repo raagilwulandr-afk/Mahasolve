@@ -15,6 +15,10 @@
                class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition {{ ($filterStatus ?? 'semua') === 'semua' ? 'bg-[#4F46E5] text-white' : 'bg-[#EEF1FB] text-[#6B6F85] hover:bg-[#E2E7F8]' }}">
                 Semua
             </a>
+            <a href="{{ route('pesanan.index', ['status' => 'negosiasi']) }}"
+               class="px-3.5 py-1.5 rounded-full text-xs font-medium transition {{ ($filterStatus ?? '') === 'negosiasi' ? 'bg-[#4F46E5] text-white' : 'bg-[#EEF1FB] text-[#6B6F85] hover:bg-[#E2E7F8]' }}">
+                Negosiasi Aktif
+            </a>
             <a href="{{ route('pesanan.index', ['status' => 'diproses']) }}"
                class="px-3.5 py-1.5 rounded-full text-xs font-medium transition {{ ($filterStatus ?? '') === 'diproses' ? 'bg-[#4F46E5] text-white' : 'bg-[#EEF1FB] text-[#6B6F85] hover:bg-[#E2E7F8]' }}">
                 Diproses
@@ -32,7 +36,7 @@
 
     @if ($daftarAktivitas->isEmpty())
         <div class="bg-white border border-[#14162B14] rounded-2xl p-10 text-center">
-            <p class="text-sm text-[#6B6F85]">Belum ada pesanan. Yuk cari layanan dulu.</p>
+            <p class="text-sm text-[#6B6F85]">Belum ada aktivitas. Yuk cari layanan kampus dulu.</p>
             <a href="{{ route('catalog.index') }}" class="inline-block mt-2 text-sm font-medium" style="color:#4F46E5;">Lihat Katalog &rarr;</a>
         </div>
     @else
@@ -41,7 +45,10 @@
             {{-- ================= SIDEBAR: LIST SEMUA AKTIVITAS + RIWAYAT ================= --}}
             <aside class="space-y-3">
                 @foreach ($daftarAktivitas as $item)
-                    @php $aktif = $item->is_pesanan && (int) $item->id_pesanan === (int) $selectedId; @endphp
+                    @php
+                        $aktif = ($item->is_pesanan && (int) $item->id_pesanan === (int) $selectedId) ||
+                                 (! $item->is_pesanan && (int) $item->id_negosiasi === (int) optional($selectedNegosiasi)->id_negosiasi);
+                    @endphp
                     <a href="{{ $item->url }}"
                        class="flex items-center gap-3 bg-white border rounded-2xl p-4 transition {{ $aktif ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-[#14162B14] hover:shadow-sm' }}">
                         <span class="w-12 h-12 rounded-full flex items-center justify-center font-display font-bold shrink-0" style="background:#EEF1FB; color:#4F46E5;">
@@ -66,7 +73,68 @@
 
             {{-- ================= DETAIL PANEL ================= --}}
             <div class="bg-white border border-[#14162B14] rounded-2xl overflow-hidden">
-                @if ($selected)
+                @if ($selectedNegosiasi)
+                    {{-- DETAIL PANEL: NEGOSIASI AKTIF --}}
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6" style="background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);">
+                        <div class="flex items-center gap-4">
+                            <span class="w-16 h-16 rounded-full flex items-center justify-center font-display font-bold text-xl text-white shrink-0" style="background:rgba(255,255,255,0.2); box-shadow:0 0 0 4px rgba(255,255,255,0.3);">
+                                {{ strtoupper(substr($selectedNegosiasi->provider->user->username, 0, 1)) }}
+                            </span>
+                            <div>
+                                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase text-white" style="background:rgba(255,255,255,0.25);">
+                                    Status · Tahap Negosiasi Chat
+                                </span>
+                                <h2 class="font-display font-bold text-xl text-white mt-1">{{ Str::limit($selectedNegosiasi->request->detail_kebutuhan, 40) }}</h2>
+                                <p class="text-sm text-white/90 mt-0.5">{{ $selectedNegosiasi->provider->user->username }} · {{ $selectedNegosiasi->request->kategori }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-[11px] uppercase tracking-wide text-white/80">Tawaran Terakhir</p>
+                            <p class="font-display font-extrabold text-3xl text-white">
+                                Rp{{ number_format(optional($selectedNegosiasi->detailNegosiasi->last())->harga_tawaran ?? 0, 0, ',', '.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 space-y-6">
+                        <div class="bg-amber-50/60 border border-amber-200/70 rounded-2xl p-4 flex items-start gap-3">
+                            <svg class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div class="text-xs text-amber-900 leading-relaxed">
+                                <p class="font-bold">Penawaran Dalam Diskusi Interaktif</p>
+                                <p class="mt-0.5 text-amber-800">
+                                    Penyedia <span class="font-bold">{{ $selectedNegosiasi->provider->user->username }}</span> dan kamu sedang dalam tahap diskusi tawar-menawar harga dan instruksi pengerjaan.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#EEF1FB66] rounded-2xl p-5 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-xs text-[#6B6F85]">Kode Negosiasi</p>
+                                <p class="font-semibold text-xs mt-0.5">NEG-{{ str_pad($selectedNegosiasi->id_negosiasi, 4, '0', STR_PAD_LEFT) }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[#6B6F85]">Tanggal Diajukan</p>
+                                <p class="font-semibold text-xs mt-0.5">{{ $selectedNegosiasi->created_at->translatedFormat('d M Y H:i') }}</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-xs text-[#6B6F85]">Detail Kebutuhan</p>
+                                <p class="font-medium text-xs text-slate-800 mt-1 bg-white p-3 rounded-xl border border-slate-200/80">
+                                    {{ $selectedNegosiasi->request->detail_kebutuhan }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('negosiasi.show', $selectedNegosiasi->id_negosiasi) }}"
+                           class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-xs rounded-2xl shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-2 cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Buka Ruang Chat &amp; Negosiasi Harga &rarr;
+                        </a>
+                    </div>
+                @elseif ($selected)
                     {{-- Header gradien --}}
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6" style="background: linear-gradient(90deg, #4F46E5 0%, #14B8A6 100%);">
                         <div class="flex items-center gap-4">

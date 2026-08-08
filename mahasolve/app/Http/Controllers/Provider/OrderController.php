@@ -280,6 +280,7 @@ class OrderController extends Controller
             'status_pesanan' => 'required|string',
             'pesan_progress' => 'nullable|string',
             'dokumen' => 'nullable|string',
+            'file_dokumen' => 'nullable|file|max:10240',
         ]);
 
         $statusPesanan = ($request->status_pesanan === 'diproses' || $request->status_pesanan === 'dikerjakan') ? 'dikerjakan' : 'selesai';
@@ -300,18 +301,31 @@ class OrderController extends Controller
             $pesanan->update(['status_pesanan' => $statusPesanan]);
         }
 
+        $dokumenPath = $request->dokumen;
+
+        if ($request->hasFile('file_dokumen')) {
+            $uploadedFile = $request->file('file_dokumen');
+            $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $uploadedFile->getClientOriginalName());
+            $uploadDir = public_path('uploads/deliverables');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $uploadedFile->move($uploadDir, $filename);
+            $dokumenPath = asset('uploads/deliverables/' . $filename);
+        }
+
         // Catat di TrackingPesanan
         TrackingPesanan::create([
             'id_pesanan' => $pesanan->id_pesanan,
             'status_pengerjaan' => $request->pesan_progress ?? ("Status pesanan diperbarui menjadi: " . ucfirst($statusPesanan)),
-            'file_progress' => $request->dokumen,
+            'file_progress' => $dokumenPath,
         ]);
 
         // Simpan deliverable jika ada berkas/link yang diserahkan
-        if ($request->dokumen) {
+        if ($dokumenPath) {
             DetailPekerjaan::create([
                 'id_pesanan' => $pesanan->id_pesanan,
-                'dokumen' => $request->dokumen,
+                'dokumen' => $dokumenPath,
                 'instruksi_pengerjaan' => $request->pesan_progress ?? 'Hasil pekerjaan telah diunggah oleh provider.',
                 'format_hasil' => 'File / Link Hasil Pekerjaan',
                 'tanggal_upload' => now(),

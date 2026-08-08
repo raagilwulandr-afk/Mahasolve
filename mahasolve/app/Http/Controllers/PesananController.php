@@ -21,25 +21,31 @@ class PesananController extends Controller
     public function index(Request $httpRequest)
     {
         $user = auth()->user();
+        $user = auth()->user();
         $filterStatus = $httpRequest->query('status', 'semua');
 
-        $negosiasiAktif = Negosiasi::whereHas('request', fn ($q) => $q->where('id_user', $user->id_user))
+        $semuaNegosiasi = Negosiasi::whereHas('request', fn ($q) => $q->where('id_user', $user->id_user))
             ->whereIn('status_negosiasi', ['pending', 'ditawar_ulang'])
             ->whereDoesntHave('pesanan')
-            ->with('provider.user', 'request')
-            ->get()
-            ->map(fn ($n) => (object) [
-                'is_pesanan' => false,
-                'id_pesanan' => null,
-                'status_pesanan' => 'diproses',
-                'judul' => $n->request->detail_kebutuhan,
-                'nama_provider' => $n->provider->user->username,
-                'kode' => 'NEG-' . str_pad($n->id_negosiasi, 4, '0', STR_PAD_LEFT),
-                'badge' => 'Negosiasi',
-                'badge_color' => 'amber',
-                'tanggal' => $n->created_at,
-                'url' => route('negosiasi.show', $n->id_negosiasi),
-            ]);
+            ->with('provider.user', 'request', 'detailNegosiasi')
+            ->get();
+
+        $negosiasiList = $semuaNegosiasi->map(fn ($n) => (object) [
+            'is_pesanan' => false,
+            'id_pesanan' => null,
+            'id_negosiasi' => $n->id_negosiasi,
+            'status_pesanan' => 'negosiasi',
+            'judul' => $n->request->detail_kebutuhan,
+            'nama_provider' => $n->provider->user->username,
+            'kode' => 'NEG-' . str_pad($n->id_negosiasi, 4, '0', STR_PAD_LEFT),
+            'badge' => 'Negosiasi',
+            'badge_color' => 'amber',
+            'tanggal' => $n->created_at,
+            'url' => route('pesanan.index', ['negosiasi' => $n->id_negosiasi, 'status' => $filterStatus]),
+            'chat_url' => route('negosiasi.show', $n->id_negosiasi),
+            'harga_tawaran' => optional($n->detailNegosiasi->last())->harga_tawaran ?? 0,
+            'pesan_terakhir' => optional($n->detailNegosiasi->last())->detail_negosiasi ?? 'Penawaran sedang didiskusikan',
+        ]);
 
         $semuaPesanan = Pesanan::whereHas('negosiasi.request', fn ($q) => $q->where('id_user', $user->id_user))
             ->with('negosiasi.provider.user', 'negosiasi.request', 'pembayaran', 'ratingReview')
@@ -48,6 +54,7 @@ class PesananController extends Controller
         $pesananList = $semuaPesanan->map(fn ($p) => (object) [
             'is_pesanan' => true,
             'id_pesanan' => $p->id_pesanan,
+            'id_negosiasi' => $p->id_negosiasi,
             'status_pesanan' => $p->status_pesanan,
             'judul' => $p->negosiasi->request->detail_kebutuhan,
             'nama_provider' => $p->negosiasi->provider->user->username,
@@ -65,21 +72,49 @@ class PesananController extends Controller
             },
             'tanggal' => $p->tanggal_pesanan,
             'url' => route('pesanan.index', ['pesanan' => $p->id_pesanan, 'status' => $filterStatus]),
+            'chat_url' => route('pesanan.show', $p->id_pesanan),
         ]);
 
         // Gabung semua (negosiasi aktif + pesanan), urut terbaru
-        $gabungan = $negosiasiAktif->concat($pesananList)->sortByDesc('tanggal')->values();
+        $gabungan = $negosiasiList->concat($pesananList)->sortByDesc('tanggal')->values();
 
         // Filter berdasarkan tab status jika dipilih
-        if ($filterStatus === 'diproses') {
-            $daftarAktivitas = $gabungan->filter(fn ($item) => in_array($item->status_pesanan, ['diproses', 'dikerjakan', 'revisi', 'menunggu_pengerjaan']))->values();
+        if ($filterStatus === 'negosiasi') {
+            $daftarAktivitas = $gabungan->filter(fn ($item) => ! $item->is_pesanan)->values();
+        } elseif ($filterStatus === 'diproses') {
+            $daftarAktivitas = $gabungan->filter(fn ($item) => $item->is_pesanan && in_array($item->status_pesanan, ['diproses', 'dikerjakan', 'revisi', 'menunggu_pengerjaan']))->values();
         } elseif ($filterStatus === 'selesai') {
-            $daftarAktivitas = $gabungan->filter(fn ($item) => $item->status_pesanan === 'selesai')->values();
+            $daftarAktivitas = $gabungan->filter(fn ($item) => $item->is_pesanan && $item->status_pesanan === 'selesai')->values();
         } elseif ($filterStatus === 'dibatalkan') {
-            $daftarAktivitas = $gabungan->filter(fn ($item) => $item->status_pesanan === 'dibatalkan')->values();
+            $daftarAktivitas = $gabungan->filter(fn ($item) => $item->is_pesanan && $item->status_pesanan === 'dibatalkan')->values();
         } else {
             $daftarAktivitas = $gabungan;
         }
+
+        // Pesanan / Negosiasi yang sedang dipilih untuk ditampilkan di panel detail kanan
+        $selectedNegosiasiId = $httpRequest->query('negosiasi');
+        $selectedPesananId = $httpRequest->query('pesanan');
+
+        $selectedNegosiasi = null;
+        $selected = null;
+
+        if ($selectedNegosiasiId) {
+            $selectedNegosiasi = $semuaNegosiasi->firstWhere('id_negosiasi', (int) $selectedNegosiasiId);
+        } elseif ($selectedPesananId) {
+            $selected = $semuaPesanan->firstWhere('id_pesanan', (int) $selectedPesananId);
+        } else {
+            // Default select first activity item
+            $firstItem = $daftarAktivitas->first();
+            if ($firstItem) {
+                if ($firstItem->is_pesanan) {
+                    $selected = $semuaPesanan->firstWhere('id_pesanan', $firstItem->id_pesanan);
+                } else {
+                    $selectedNegosiasi = $semuaNegosiasi->firstWhere('id_negosiasi', $firstItem->id_negosiasi);
+                }
+            }
+        }
+
+        $selectedId = $selected ? $selected->id_pesanan : null;
 
         // Calculate accurate stepper step index (0: Dipesan, 1: Dikonfirmasi, 2: Diproses, 3: Selesai)
         $stepIndex = 0;
@@ -95,7 +130,7 @@ class PesananController extends Controller
             }
         }
 
-        return view('pesanan.index', compact('daftarAktivitas', 'selected', 'selectedId', 'stepIndex', 'filterStatus'));
+        return view('pesanan.index', compact('daftarAktivitas', 'selected', 'selectedNegosiasi', 'selectedId', 'selectedNegosiasiId', 'stepIndex', 'filterStatus'));
     }
 
     public function show(Pesanan $pesanan)
