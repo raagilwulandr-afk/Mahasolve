@@ -27,7 +27,7 @@
     "BROADCAST_CONNECTION": "log",
     "FILESYSTEM_DISK": "local",
     "QUEUE_CONNECTION": "sync",
-    "CACHE_STORE": "array",
+    "CACHE_STORE": "file",
     "MAIL_MAILER": "log",
     "MAIL_FROM_ADDRESS": "no-reply@mahasolve.com",
     "MAIL_FROM_NAME": "Mahasolve",
