@@ -30,6 +30,7 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
+                'regex:/^[a-zA-Z0-9._%+-]+@mahasiswa\.unikom\.ac\.id$/i',
                 Rule::unique(User::class, 'email')->ignore($this->user()->id_user, 'id_user'),
             ],
             'no_hp' => ['nullable', 'string', 'max:25'],
