@@ -185,6 +185,17 @@ class PesananController extends Controller
 
     private function authorizeParticipant(Pesanan $pesanan): void
     {
-        $this->authorize('view', $pesanan);
+        $user = auth()->user();
+        if (!$user) {
+            abort(401);
+        }
+
+        $mahasiswaId = $pesanan->negosiasi->request->id_user ?? null;
+        $providerId = $pesanan->negosiasi->id_provider ?? null;
+        $userProviderId = $user->provider->id_provider ?? null;
+
+        if ((int)$user->id_user !== (int)$mahasiswaId && (int)$userProviderId !== (int)$providerId) {
+            abort(403, 'Kamu tidak memiliki akses ke pesanan ini.');
+        }
     }
 }
