@@ -13,33 +13,35 @@
             </svg>
         </div>
 
-        <div class="relative z-10 max-w-2xl space-y-4">
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md text-white font-bold text-[11px] rounded-full border border-white/20">
-                    <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    Layanan Kampus Terpercaya
-                </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md text-white font-bold text-[11px] rounded-full border border-white/20">
-                    <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                    Garansi Cepat & Transparan
-                </span>
+        <div class="relative z-10 space-y-5">
+            <div class="max-w-2xl space-y-4">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md text-white font-bold text-[11px] rounded-full border border-white/20">
+                        <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        Layanan Kampus Terpercaya
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md text-white font-bold text-[11px] rounded-full border border-white/20">
+                        <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Garansi Cepat &amp; Transparan
+                    </span>
+                </div>
+
+                <h1 class="font-display font-extrabold text-2xl sm:text-4xl leading-tight tracking-tight">
+                    Pesan Layanan Mahasiswa Unikom Cepat &amp; Praktis
+                </h1>
+                <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+                    Pesan jasa antar jemput, cetak tugas, tutor bimbingan, hingga desain dalam satu aplikasi. Mitra terverifikasi siap melayani kebutuhan kampusmu.
+                </p>
             </div>
 
-            <h1 class="font-display font-extrabold text-2xl sm:text-4xl leading-tight tracking-tight">
-                Pesan Layanan Mahasiswa Unikom Cepat & Praktis
-            </h1>
-            <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
-                Pesan jasa antar jemput, cetak tugas, tutor bimbingan, hingga desain dalam satu aplikasi. Mitra terverifikasi siap melayani kebutuhan kampusmu.
-            </p>
-
-            <!-- SEARCH BAR (GOJEK SEARCH STYLE) -->
-            <form method="GET" class="relative pt-2">
+            <!-- SEARCH BAR (FULL WIDTH / MENTOK KANAN) -->
+            <form method="GET" class="relative pt-2 w-full">
                 <input type="hidden" name="kategori" value="{{ $kategoriAktif }}">
-                <div class="relative flex items-center">
+                <div class="relative flex items-center w-full">
                     <svg class="absolute left-4 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
