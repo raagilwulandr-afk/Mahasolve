@@ -1,5 +1,7 @@
 <?php
 
+define('LARAVEL_START', microtime(true));
+
 // 1. Ensure /tmp storage directories exist for serverless read-only filesystem
 $tmpStorage = '/tmp/storage';
 $directories = [
@@ -23,9 +25,15 @@ foreach ($directories as $dir) {
 putenv("APP_STORAGE_PATH={$tmpStorage}");
 putenv("VIEW_COMPILED_PATH={$tmpStorage}/framework/views");
 
-// 3. Require vendor autoload and Laravel entrypoint
-if (file_exists(__DIR__ . '/../mahasolve/vendor/autoload.php')) {
-    require __DIR__ . '/../mahasolve/vendor/autoload.php';
-}
+// 3. Register Composer autoloader
+require __DIR__ . '/../mahasolve/vendor/autoload.php';
 
-require __DIR__ . '/../mahasolve/public/index.php';
+// 4. Bootstrap Laravel application
+$app = require_once __DIR__ . '/../mahasolve/bootstrap/app.php';
+
+// 5. Explicitly set storage path to /tmp/storage
+$app->useStoragePath($tmpStorage);
+
+// 6. Handle incoming HTTP request
+$app->handleRequest(\Illuminate\Http\Request::capture());
+
