@@ -37,17 +37,19 @@ putenv("SESSION_DRIVER=cookie");
 putenv("CACHE_STORE=array");
 putenv("QUEUE_CONNECTION=sync");
 
-// 3. Register Composer autoloader
+// 3. Set HTTPS environment server variables for reverse proxy
+$_SERVER['HTTPS'] = 'on';
+$_SERVER['SERVER_PORT'] = 443;
+$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+// 4. Register Composer autoloader
 require __DIR__ . '/../mahasolve/vendor/autoload.php';
 
-// 4. Bootstrap Laravel application
+// 5. Bootstrap Laravel application
 $app = require_once __DIR__ . '/../mahasolve/bootstrap/app.php';
 
-// 5. Explicitly set storage path to /tmp/storage
+// 6. Explicitly set storage path to /tmp/storage
 $app->useStoragePath($tmpStorage);
-
-// 6. Force HTTPS scheme for serverless proxy
-\Illuminate\Support\Facades\URL::forceScheme('https');
 
 // 7. Handle incoming HTTP request
 $app->handleRequest(\Illuminate\Http\Request::capture());
