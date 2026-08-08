@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id('id_user');
             $table->string('username', 100);
             $table->string('email', 150)->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('no_hp', 20)->nullable();
             $table->enum('role', ['mahasiswa', 'provider']);

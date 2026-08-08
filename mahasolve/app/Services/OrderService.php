@@ -17,6 +17,11 @@ class OrderService
     public function createDirectOrder(User $user, int $layananId, ?string $catatan = null): Pesanan
     {
         $layanan = Layanan::with('provider')->findOrFail($layananId);
+        
+        if ($user->isProvider() && (int) $layanan->id_provider === (int) $user->provider?->id_provider) {
+            abort(400, 'Anda tidak dapat memesan layanan milik Anda sendiri.');
+        }
+
         $pesanan = null;
 
         DB::transaction(function () use ($user, $layanan, $catatan, &$pesanan) {

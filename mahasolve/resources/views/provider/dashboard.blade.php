@@ -265,7 +265,7 @@
                         </div>
                     </div>
                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
-                        {{ ucfirst(str_replace('_', ' ', $layananAktif->status_pesanan ?? 'Diproses')) }}
+                        {{ ucfirst(str_replace('_', ' ', is_object($layananAktif->status_pesanan) ? ($layananAktif->status_pesanan->value ?? 'diproses') : ($layananAktif->status_pesanan ?? 'diproses'))) }}
                     </span>
                 </div>
 
