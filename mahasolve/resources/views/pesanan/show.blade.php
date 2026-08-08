@@ -74,6 +74,48 @@
         <!-- KOLOM KIRI: DELIVERABLES & PROGRESS TRACKER (8 COLS) -->
         <div class="lg:col-span-8 space-y-6">
 
+            <!-- FORM UPLOAD DETAIL PEKERJAAN & BERKAS INTRUKSI (MAHASISWA) -->
+            @if (auth()->user()->isMahasiswa() && in_array($pesanan->status_pesanan, ['menunggu_pengerjaan', 'dikerjakan', 'revisi']))
+                <form method="POST" action="{{ route('detailPekerjaan.store', $pesanan->id_pesanan) }}" enctype="multipart/form-data"
+                      class="bg-white border border-indigo-200 rounded-3xl p-6 shadow-sm space-y-4">
+                    @csrf
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                            📤
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-sm text-slate-900">Upload Berkas &amp; Instruksi Pekerjaan</h3>
+                            <p class="text-xs text-slate-500">Kirimkan instruksi detail, catatan revisi, atau file pendukung ke Mitra Provider.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Instruksi &amp; Detail Catatan Pekerjaan <span class="text-rose-500">*</span></label>
+                        <textarea name="instruksi_pengerjaan" rows="3" required placeholder="Jelaskan kebutuhan pengerjaan, poin revisi, atau catatan khusus..."
+                                  class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Upload Berkas / File Utama (Max 10MB)</label>
+                            <input type="file" name="dokumen" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs file:mr-3 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Upload File Referensi Tambahan (Opsional)</label>
+                            <input type="file" name="referensi" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs file:mr-3 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs rounded-2xl shadow-md shadow-indigo-500/20 transition flex items-center justify-center gap-2 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                        Kirim Detail Pekerjaan &amp; Berkas ke Provider
+                    </button>
+                </form>
+            @endif
+
             <!-- DELIVERABLES & HASIL PEKERJAAN -->
             <div class="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">

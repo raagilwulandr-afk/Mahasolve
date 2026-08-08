@@ -3,7 +3,7 @@
 @section('title', 'Negosiasi — ' . $negosiasi->provider->user->username)
 
 @section('content')
-    <div class="grid lg:grid-cols-[300px_1fr] gap-6 items-start">
+    <div x-data="{ showRejectModal: false }" class="grid lg:grid-cols-[300px_1fr] gap-6 items-start">
 
         {{-- ================= SIDEBAR: DETAIL LAYANAN ================= --}}
         <aside class="bg-white border border-[#14162B14] rounded-2xl p-5 lg:sticky lg:top-24">
@@ -82,16 +82,13 @@
                                 @if ($milikMahasiswa)
                                     <div class="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-100">
                                         <p class="text-xs text-[#6B6F85]">Menunggu respon provider...</p>
-                                        <form method="POST" action="{{ route('negosiasi.reject', $negosiasi->id_negosiasi) }}"
-                                              onsubmit="return confirm('Tolak & batalkan negosiasi ini?')">
-                                            @csrf
-                                            <button class="px-3.5 py-1.5 rounded-full text-xs font-bold text-rose-600 border border-rose-200 bg-rose-50 hover:bg-rose-100 transition cursor-pointer flex items-center gap-1">
-                                                <svg class="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                </svg>
-                                                Tolak Negosiasi
-                                            </button>
-                                        </form>
+                                        <button type="button" @click="showRejectModal = true"
+                                                class="px-3.5 py-1.5 rounded-full text-xs font-bold text-rose-600 border border-rose-200 bg-rose-50 hover:bg-rose-100 transition cursor-pointer flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                            Tolak Negosiasi
+                                        </button>
                                     </div>
                                 @else
                                     <div class="flex gap-2 mt-3">
@@ -103,16 +100,13 @@
                                                 class="px-4 py-2 rounded-full text-sm font-medium border border-[#14162B14]" style="background:#F59E0B;">
                                             Nego
                                         </button>
-                                        <form method="POST" action="{{ route('negosiasi.reject', $negosiasi->id_negosiasi) }}"
-                                              onsubmit="return confirm('Tolak & batalkan negosiasi ini?')">
-                                            @csrf
-                                            <button class="px-4 py-2 rounded-full text-sm font-bold border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 transition cursor-pointer flex items-center gap-1.5">
-                                                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                </svg>
-                                                Tolak Negosiasi
-                                            </button>
-                                        </form>
+                                        <button type="button" @click="showRejectModal = true"
+                                                class="px-4 py-2 rounded-full text-sm font-bold border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 transition cursor-pointer flex items-center gap-1.5">
+                                            <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                            Tolak Negosiasi
+                                        </button>
                                     </div>
                                 @endif
                             </div>
@@ -157,6 +151,57 @@
                     </div>
                 </form>
             @endif
-        </div>
+        <!-- MODERN CUSTOM GLASSMORPHISM REJECT CONFIRMATION MODAL -->
+        <template x-teleport="body">
+            <div x-show="showRejectModal"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4"
+                 style="display: none;">
+                <div @click.away="showRejectModal = false"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                     class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 border border-slate-100">
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center shrink-0 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-extrabold text-lg text-slate-900">Tolak &amp; Batalkan Negosiasi?</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Konfirmasi pembatalan penawaran harga</p>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-600 leading-relaxed bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
+                        Apakah Anda yakin ingin menolak penawaran harga ini? Negosiasi akan dibatalkan dan status permintaan Anda akan dibuka kembali agar bisa memilih mitra lain.
+                    </p>
+
+                    <div class="flex items-center justify-end gap-3 pt-2">
+                        <button type="button" @click="showRejectModal = false"
+                                class="px-5 py-2.5 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition cursor-pointer">
+                            Batal
+                        </button>
+                        <form method="POST" action="{{ route('negosiasi.reject', $negosiasi->id_negosiasi) }}">
+                            @csrf
+                            <button type="submit"
+                                    class="px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow-md shadow-rose-500/20 cursor-pointer flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                Ya, Tolak Negosiasi
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
 @endsection
