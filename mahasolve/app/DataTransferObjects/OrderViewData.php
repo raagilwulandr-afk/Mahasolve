@@ -19,11 +19,20 @@ class OrderViewData
             default => 'Pending',
         };
 
-        $chats = Negosiasi::where('id_request', $nego->id_request)
-            ->where('id_provider', $nego->id_provider)
-            ->orderBy('created_at', 'asc')
-            ->get()
-            ->map(fn ($chat) => ChatMessageData::fromModel($chat)->toArray());
+        $chats = $nego->pesanNegosiasi->map(function ($chat) use ($nego) {
+            $isProviderSender = ($chat->peran_pengirim === 'provider');
+            return [
+                'id' => $chat->id_pesan,
+                'pesan' => $chat->pesan,
+                'text' => $chat->pesan,
+                'message' => $chat->pesan,
+                'harga_tawaran' => $chat->harga_tawaran ?? $nego->harga_tawaran,
+                'offered_price' => $chat->harga_tawaran ?? $nego->harga_tawaran,
+                'time' => $chat->created_at ? $chat->created_at->format('H:i') : now()->format('H:i'),
+                'sender' => $chat->peran_pengirim,
+                'isProvider' => $isProviderSender,
+            ];
+        });
 
         return [
             'id' => $nego->id_negosiasi,

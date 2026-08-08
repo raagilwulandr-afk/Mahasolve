@@ -1,6 +1,38 @@
 {
   "version": 2,
   "outputDirectory": "public",
+  "env": {
+    "APP_NAME": "Mahasolve",
+    "APP_ENV": "production",
+    "APP_KEY": "base64:I/KP3ea6LZ1BdwivRnu8pSiY844KzXsu2ZrYeBB6YXk=",
+    "APP_DEBUG": "false",
+    "APP_URL": "https://mahasolve.vercel.app",
+    "APP_LOCALE": "id",
+    "APP_FALLBACK_LOCALE": "id",
+    "APP_FAKER_LOCALE": "id_ID",
+    "BCRYPT_ROUNDS": "10",
+    "LOG_CHANNEL": "stderr",
+    "LOG_LEVEL": "info",
+    "DB_CONNECTION": "pgsql",
+    "DB_HOST": "aws-0-ap-southeast-1.pooler.supabase.com",
+    "DB_PORT": "6543",
+    "DB_DATABASE": "postgres",
+    "DB_USERNAME": "postgres.mbqpxgbfjrexjmvfypip",
+    "DB_PASSWORD": "cDt1DoEy8WZN5XKN",
+    "DB_SSLMODE": "require",
+    "SESSION_DRIVER": "cookie",
+    "SESSION_LIFETIME": "120",
+    "SESSION_ENCRYPT": "true",
+    "SESSION_PATH": "/",
+    "BROADCAST_CONNECTION": "log",
+    "FILESYSTEM_DISK": "local",
+    "QUEUE_CONNECTION": "sync",
+    "CACHE_STORE": "array",
+    "MAIL_MAILER": "log",
+    "MAIL_FROM_ADDRESS": "no-reply@mahasolve.com",
+    "MAIL_FROM_NAME": "Mahasolve",
+    "VITE_APP_NAME": "Mahasolve"
+  },
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
@@ -15,7 +47,14 @@
       }
     },
     {
-      "src": "/(images|favicon.ico|favicon.svg|robots.txt)",
+      "src": "/images/(.*)",
+      "dest": "/images/$1",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/(favicon.ico|favicon.svg|robots.txt)",
       "dest": "/$1"
     },
     {

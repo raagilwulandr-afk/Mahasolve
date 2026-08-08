@@ -61,7 +61,7 @@ class User extends Authenticatable
     {
         return $this->provider ?? Provider::create([
             'id_user' => $this->id_user,
-            'rating' => 5.0,
+            'rating' => 0.0,
             'detail_provider' => 'Mitra Jasa Terverifikasi Mahasolve',
             'status_verifikasi' => 'terverifikasi',
             'nomor_ktm' => 'KTM-UNIKOM-' . str_pad((string)$this->id_user, 5, '0', STR_PAD_LEFT),

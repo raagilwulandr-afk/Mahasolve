@@ -20,7 +20,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
     public function run(): void
     {
         // Clean up previous test entries for clean 2-account model
-        DB::statement('TRUNCATE TABLE rating_review, pembayaran, tracking_pesanan, detail_pekerjaan, pesanan, negosiasi, request_layanan, layanan, provider, "user" RESTART IDENTITY CASCADE;');
+        DB::statement('TRUNCATE TABLE penarikan_saldo, pesan_negosiasi, rating_review, pembayaran, tracking_pesanan, detail_pekerjaan, pesanan, negosiasi, request_layanan, layanan, provider, "user" RESTART IDENTITY CASCADE;');
 
         // ==========================================
         // 1. DUA AKUN PERCONTOHAN UAT MAHASOLVE
@@ -118,6 +118,22 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'status_negosiasi' => 'disepakati',
         ]);
 
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $nego1->id_negosiasi,
+            'id_pengirim' => $budi->id_user,
+            'peran_pengirim' => 'mahasiswa',
+            'pesan' => 'Halo Kak Dewi, mau minta bimbingan Clean Architecture Laravel dong.',
+            'harga_tawaran' => 50000,
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $nego1->id_negosiasi,
+            'id_pengirim' => $dewiUser->id_user,
+            'peran_pengirim' => 'provider',
+            'pesan' => 'Bisa dibimbing langsung di Perpustakaan Unikom Lantai 3. Saya kasih diskon Rp45.000 ya.',
+            'harga_tawaran' => 45000,
+        ]);
+
         $pesanan1 = Pesanan::create([
             'id_negosiasi' => $nego1->id_negosiasi,
             'harga_final' => 45000,
@@ -142,6 +158,9 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'review' => 'Penjelasan sangat jelas, sabar, dan membantu tugas akhir saya selesai dengan sangat rapi!',
         ]);
 
+        // Refresh rating Dewi setelah ada review 5 bintang dari pesanan 1
+        $providerDewi->refreshRating();
+
         // ==========================================
         // 5. SKENARIO BUSINESS FLOW 2: PESANAN SEDANG DIPROSES
         // ==========================================
@@ -161,6 +180,22 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'dibuat_oleh' => 'provider',
             'detail_negosiasi' => 'Siap diprint HVS 80gr jilid pita emas',
             'status_negosiasi' => 'disepakati',
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $negoPrint->id_negosiasi,
+            'id_pengirim' => $budi->id_user,
+            'peran_pengirim' => 'mahasiswa',
+            'pesan' => 'Kak, tolong printkan berkas skripsi saya 50 lembar ya.',
+            'harga_tawaran' => 35000,
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $negoPrint->id_negosiasi,
+            'id_pengirim' => $dewiUser->id_user,
+            'peran_pengirim' => 'provider',
+            'pesan' => 'Siap diprint HVS 80gr jilid pita emas. Sudah disetujui.',
+            'harga_tawaran' => 35000,
         ]);
 
         $pesanan2 = Pesanan::create([
@@ -193,13 +228,29 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'status_request' => 'open',
         ]);
 
-        Negosiasi::create([
+        $nego2 = Negosiasi::create([
             'id_request' => $req2->id_request,
             'id_provider' => $providerDewi->id_provider,
             'harga_tawaran' => 28000,
             'dibuat_oleh' => 'provider',
             'detail_negosiasi' => 'Bisa dibelikan sekaligus antar ke Ruang 4.02 Kampus Unikom',
             'status_negosiasi' => 'pending',
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $nego2->id_negosiasi,
+            'id_pengirim' => $budi->id_user,
+            'peran_pengirim' => 'mahasiswa',
+            'pesan' => 'Kak, bisa tolong belikan Ayam Geprek 2 porsi?',
+            'harga_tawaran' => 30000,
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $nego2->id_negosiasi,
+            'id_pengirim' => $dewiUser->id_user,
+            'peran_pengirim' => 'provider',
+            'pesan' => 'Bisa dibelikan sekaligus antar ke Ruang 4.02 Kampus Unikom. Saya tawar Rp28.000 ya.',
+            'harga_tawaran' => 28000,
         ]);
     }
 }

@@ -88,6 +88,21 @@ class ProviderDashboardController extends Controller
             'no_rekening' => 'required|string',
         ]);
 
-        return redirect()->back()->with('success', 'Penarikan saldo sebesar Rp' . number_format($request->jumlah, 0, ',', '.') . ' ke ' . $request->metode . ' (' . $request->no_rekening . ') berhasil diproses!');
+        $provider = $request->user()->getOrCreateProvider();
+        $stats = $this->providerService->getDashboardStats($provider);
+
+        if ($request->jumlah > $stats->saldoBisaDitarik) {
+            return redirect()->back()->with('error', 'Gagal mencairkan saldo: Saldo bisa ditarik Anda tidak mencukupi (Maksimal Rp' . number_format($stats->saldoBisaDitarik, 0, ',', '.') . ').');
+        }
+
+        \App\Models\PenarikanSaldo::create([
+            'id_provider' => $provider->id_provider,
+            'jumlah' => $request->jumlah,
+            'metode' => $request->metode,
+            'no_rekening' => $request->no_rekening,
+            'status' => 'diproses',
+        ]);
+
+        return redirect()->back()->with('success', 'Permintaan penarikan saldo sebesar Rp' . number_format($request->jumlah, 0, ',', '.') . ' ke ' . $request->metode . ' (' . $request->no_rekening . ') berhasil diajukan dan sedang diproses!');
     }
 }

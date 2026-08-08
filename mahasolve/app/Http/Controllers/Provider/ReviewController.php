@@ -39,7 +39,7 @@ class ReviewController extends Controller
                 'customer_name' => $mhs?->username ?? $mhs?->nama ?? 'Mahasiswa',
                 'income' => $statusVal === 'dibatalkan' ? 0 : ($pesanan->harga_final ?? 0),
                 'has_review' => (bool) $review,
-                'rating' => $review?->rate ?? 5,
+                'rating' => $review?->rate ?? null,
                 'review_text' => $review?->review ?? null,
             ];
         });

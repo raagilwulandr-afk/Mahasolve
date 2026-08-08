@@ -33,13 +33,21 @@ class Provider extends Model
         return $this->hasMany(Negosiasi::class, 'id_provider', 'id_provider');
     }
 
-    // Hitung ulang rating rata-rata dari rating_review, dipanggil setelah ada review baru
+    public function penarikanSaldo()
+    {
+        return $this->hasMany(PenarikanSaldo::class, 'id_provider', 'id_provider');
+    }
+
+    // Hitung ulang rating rata-rata dari rating_review organik pesanan selesai
     public function refreshRating(): void
     {
-        $avg = RatingReview::whereHas('pesanan.negosiasi', function ($q) {
-            $q->where('id_provider', $this->id_provider);
+        $avg = RatingReview::whereHas('pesanan', function ($query) {
+            $query->where('status_pesanan', 'selesai')
+                  ->whereHas('negosiasi', function ($q) {
+                      $q->where('id_provider', $this->id_provider);
+                  });
         })->avg('rate');
 
-        $this->update(['rating' => round($avg ?? 0, 1)]);
+        $this->update(['rating' => $avg !== null ? round((float) $avg, 1) : 0.0]);
     }
 }

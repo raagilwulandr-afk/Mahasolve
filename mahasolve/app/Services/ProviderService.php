@@ -27,11 +27,17 @@ class ProviderService
         ->where('status_pesanan', 'selesai')
         ->count();
 
+        $totalPenarikan = $provider->penarikanSaldo()
+            ->whereIn('status', ['diproses', 'disetujui'])
+            ->sum('jumlah') ?? 0;
+
+        $saldoBisaDitarik = max(0, $totalPendapatan - $totalPenarikan);
+
         return (object) [
             'totalPendapatan' => $totalPendapatan,
             'pesananAktif' => $pesananAktif,
             'pesananSelesai' => $pesananSelesai,
-            'saldoBisaDitarik' => $totalPendapatan,
+            'saldoBisaDitarik' => $saldoBisaDitarik,
         ];
     }
 }

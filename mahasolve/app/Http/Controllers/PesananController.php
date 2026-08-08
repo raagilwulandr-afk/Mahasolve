@@ -145,27 +145,23 @@ class PesananController extends Controller
         $pesanan->load(
             'negosiasi.request.mahasiswa',
             'negosiasi.provider.user',
+            'negosiasi.pesanNegosiasi',
             'detailPekerjaan',
             'trackingPesanan',
             'pembayaran',
             'ratingReview'
         );
 
-        $chats = Negosiasi::where('id_request', $pesanan->negosiasi->id_request)
-            ->where('id_provider', $pesanan->negosiasi->id_provider)
-            ->orderBy('created_at', 'asc')
-            ->get()
-            ->map(function ($chat) {
-                $isMahasiswaSender = ($chat->dibuat_oleh === 'mahasiswa');
-                return (object) [
-                    'id' => $chat->id_negosiasi,
-                    'message' => $chat->detail_negosiasi ?? ('Penawaran harga: Rp ' . number_format($chat->harga_tawaran, 0, ',', '.')),
-                    'harga_tawaran' => $chat->harga_tawaran,
-                    'offered_price' => $chat->harga_tawaran,
-                    'time' => $chat->created_at ? $chat->created_at->format('H:i') : now()->format('H:i'),
-                    'sender' => $isMahasiswaSender ? 'mahasiswa' : 'provider',
-                ];
-            });
+        $chats = $pesanan->negosiasi->pesanNegosiasi->map(function ($chat) use ($pesanan) {
+            return (object) [
+                'id' => $chat->id_pesan,
+                'message' => $chat->pesan,
+                'harga_tawaran' => $chat->harga_tawaran ?? $pesanan->harga_final,
+                'offered_price' => $chat->harga_tawaran ?? $pesanan->harga_final,
+                'time' => $chat->created_at ? $chat->created_at->format('H:i') : now()->format('H:i'),
+                'sender' => $chat->peran_pengirim,
+            ];
+        });
 
         return view('pesanan.show', compact('pesanan', 'chats'));
     }

@@ -24,13 +24,27 @@ class NegosiasiController extends Controller
             'detail_negosiasi' => 'nullable|string',
         ]);
 
-        $negosiasi = Negosiasi::create([
+        $negosiasi = Negosiasi::firstOrCreate([
             'id_request' => $requestLayanan->id_request,
             'id_provider' => $provider->id_provider,
+        ], [
             'harga_tawaran' => $validated['harga_tawaran'],
             'detail_negosiasi' => $validated['detail_negosiasi'] ?? null,
             'dibuat_oleh' => 'mahasiswa',
             'status_negosiasi' => 'pending',
+        ]);
+
+        $negosiasi->update([
+            'harga_tawaran' => $validated['harga_tawaran'],
+            'status_negosiasi' => 'pending',
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $negosiasi->id_negosiasi,
+            'id_pengirim' => auth()->user()->id_user,
+            'peran_pengirim' => 'mahasiswa',
+            'pesan' => $validated['detail_negosiasi'] ?? ('Mengajukan penawaran harga Rp ' . number_format($validated['harga_tawaran'], 0, ',', '.')),
+            'harga_tawaran' => $validated['harga_tawaran'],
         ]);
 
         $requestLayanan->update(['status_request' => 'diproses']);
@@ -42,15 +56,11 @@ class NegosiasiController extends Controller
 
     public function show(Negosiasi $negosiasi)
     {
-        $negosiasi->load('request.mahasiswa', 'provider.user', 'pesanan');
+        $negosiasi->load('request.mahasiswa', 'provider.user', 'pesanan', 'pesanNegosiasi');
         $this->authorizeParticipant($negosiasi);
 
-        $thread = Negosiasi::where('id_request', $negosiasi->id_request)
-            ->where('id_provider', $negosiasi->id_provider)
-            ->orderBy('created_at')
-            ->get();
-
-        $terakhir = $thread->last();
+        $thread = $negosiasi->pesanNegosiasi;
+        $terakhir = $negosiasi;
 
         $layananTerkait = $negosiasi->provider->layanan()
             ->where('kategori', $negosiasi->request->kategori)
@@ -64,29 +74,24 @@ class NegosiasiController extends Controller
     {
         $this->authorizeParticipant($negosiasi);
 
-        $terakhir = Negosiasi::where('id_request', $negosiasi->id_request)
-            ->where('id_provider', $negosiasi->id_provider)
-            ->latest('created_at')
-            ->first();
-
-        abort_if($terakhir->status_negosiasi === 'disepakati', 400, 'Negosiasi ini sudah disepakati.');
+        abort_if(is_object($negosiasi->status_negosiasi) ? $negosiasi->status_negosiasi->value === 'disepakati' : $negosiasi->status_negosiasi === 'disepakati', 400, 'Negosiasi ini sudah disepakati.');
 
         $validated = $request->validate([
             'harga_tawaran' => 'required|numeric|min:0',
             'detail_negosiasi' => 'nullable|string',
         ]);
 
-        if ($terakhir->status_negosiasi === 'pending') {
-            $terakhir->update(['status_negosiasi' => 'ditawar_ulang']);
-        }
-
-        Negosiasi::create([
-            'id_request' => $negosiasi->id_request,
-            'id_provider' => $negosiasi->id_provider,
+        $negosiasi->update([
             'harga_tawaran' => $validated['harga_tawaran'],
-            'detail_negosiasi' => $validated['detail_negosiasi'] ?? null,
-            'dibuat_oleh' => 'mahasiswa',
             'status_negosiasi' => 'pending',
+        ]);
+
+        \App\Models\PesanNegosiasi::create([
+            'id_negosiasi' => $negosiasi->id_negosiasi,
+            'id_pengirim' => auth()->user()->id_user,
+            'peran_pengirim' => 'mahasiswa',
+            'pesan' => $validated['detail_negosiasi'] ?? ('Menawarkan balik harga Rp ' . number_format($validated['harga_tawaran'], 0, ',', '.')),
+            'harga_tawaran' => $validated['harga_tawaran'],
         ]);
 
         if ($request->ajax() || $request->wantsJson()) {

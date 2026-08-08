@@ -39,6 +39,11 @@ class Negosiasi extends Model
         return $this->hasOne(Pesanan::class, 'id_negosiasi', 'id_negosiasi');
     }
 
+    public function pesanNegosiasi()
+    {
+        return $this->hasMany(PesanNegosiasi::class, 'id_negosiasi', 'id_negosiasi')->orderBy('created_at', 'asc');
+    }
+
     public function scopePending(Builder $query): Builder
     {
         return $query->where('status_negosiasi', NegotiationStatus::Pending->value);
