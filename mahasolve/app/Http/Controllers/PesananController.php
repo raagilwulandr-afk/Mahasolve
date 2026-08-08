@@ -81,11 +81,19 @@ class PesananController extends Controller
             $daftarAktivitas = $gabungan;
         }
 
-        // Pesanan yang sedang dipilih untuk ditampilkan di panel detail kanan
-        $selectedId = $httpRequest->query('pesanan', optional($semuaPesanan->sortByDesc('tanggal_pesanan')->first())->id_pesanan);
-        $selected = $semuaPesanan->firstWhere('id_pesanan', (int) $selectedId);
-
-        $stepIndex = $selected ? self::STEP_MAP[$selected->status_pesanan] ?? 0 : null;
+        // Calculate accurate stepper step index (0: Dipesan, 1: Dikonfirmasi, 2: Diproses, 3: Selesai)
+        $stepIndex = 0;
+        if ($selected) {
+            if ($selected->status_pesanan === 'selesai') {
+                $stepIndex = 3;
+            } elseif (in_array($selected->status_pesanan, ['dikerjakan', 'revisi'])) {
+                $stepIndex = 2;
+            } elseif ($selected->pembayaran && $selected->pembayaran->status_bayar === 'dikonfirmasi') {
+                $stepIndex = 1;
+            } else {
+                $stepIndex = 0;
+            }
+        }
 
         return view('pesanan.index', compact('daftarAktivitas', 'selected', 'selectedId', 'stepIndex', 'filterStatus'));
     }

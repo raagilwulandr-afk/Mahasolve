@@ -194,10 +194,19 @@
                                     <button class="px-5 py-2 rounded-full text-sm font-medium text-white" style="background:#4F46E5;">Kirim Bukti Pembayaran</button>
                                 </form>
                             @else
-                                <p class="text-sm text-[#6B6F85]">
-                                    Lihat progres & detail lengkap pekerjaan di
-                                    <a href="{{ route('pesanan.show', $selected->id_pesanan) }}" class="font-medium" style="color:#4F46E5;">halaman detail pesanan</a>.
-                                </p>
+                                <div class="space-y-3">
+                                    <p class="text-xs text-slate-500">
+                                        Pantau log progress pengerjaan, instruksi detail, dan berkas deliverable hasil pekerjaan mitra.
+                                    </p>
+                                    <a href="{{ route('pesanan.show', $selected->id_pesanan) }}"
+                                       class="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold text-xs rounded-2xl shadow-md shadow-indigo-500/20 transition flex items-center justify-center gap-2 cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                        Buka Detail Pesanan &amp; Progress Pekerjaan &rarr;
+                                    </a>
+                                </div>
                             @endif
                         </div>
                     </div>
