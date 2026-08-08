@@ -45,6 +45,7 @@
     }
 @endphp
 
+@if (!request()->is('/') && !request()->routeIs('home'))
 <nav aria-label="Breadcrumb" class="mb-6 flex items-center gap-2 text-xs font-semibold text-slate-500 bg-white/80 backdrop-blur-sm border border-slate-200/80 px-4 py-2.5 rounded-2xl shadow-sm overflow-x-auto">
     <a href="{{ $breadcrumbs[0]['url'] }}" class="flex items-center gap-1.5 hover:text-indigo-600 transition shrink-0">
         <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,3 +70,4 @@
         @endif
     @endforeach
 </nav>
+@endif
