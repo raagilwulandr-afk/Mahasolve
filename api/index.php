@@ -22,8 +22,14 @@ foreach ($directories as $dir) {
 }
 
 // 2. Set environment paths & Database fallback configuration
+putenv("TMPDIR={$tmpStorage}");
+$_ENV['TMPDIR'] = $tmpStorage;
+$_SERVER['TMPDIR'] = $tmpStorage;
+
 putenv("APP_STORAGE_PATH={$tmpStorage}");
 putenv("VIEW_COMPILED_PATH={$tmpStorage}/framework/views");
+$_ENV['VIEW_COMPILED_PATH'] = "{$tmpStorage}/framework/views";
+$_SERVER['VIEW_COMPILED_PATH'] = "{$tmpStorage}/framework/views";
 
 putenv("APP_URL=https://mahasolve-seven.vercel.app");
 
@@ -46,26 +52,5 @@ $_SERVER['HTTPS'] = 'on';
 $_SERVER['SERVER_PORT'] = 443;
 $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
-// 4. Register Composer autoloader
-if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    require __DIR__ . '/../vendor/autoload.php';
-} elseif (file_exists(__DIR__ . '/../mahasolve/vendor/autoload.php')) {
-    require __DIR__ . '/../mahasolve/vendor/autoload.php';
-}
-
-// 5. Bootstrap Laravel application
-$app = require_once __DIR__ . '/../mahasolve/bootstrap/app.php';
-
-// 6. Explicitly set storage path to /tmp/storage
-$app->useStoragePath($tmpStorage);
-
-// 7. Handle incoming HTTP request via Http Kernel
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
-
-$response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
-);
-
-$response->send();
-
-$kernel->terminate($request, $response);
+// 4. Forward Vercel request to mahasolve/public/index.php
+require __DIR__ . '/../mahasolve/public/index.php';
