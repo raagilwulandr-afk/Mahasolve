@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        [x-cloak] { display: none !important; }
         body { font-family: 'Inter', sans-serif; }
         .font-display { font-family: 'Montserrat', sans-serif; }
         .page-fade-enter { opacity: 0; transform: translateY(4px); transition: opacity 0.15s ease-out, transform 0.15s ease-out; }

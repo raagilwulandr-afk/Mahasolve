@@ -15,6 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <style>
+            [x-cloak] { display: none !important; }
             body { font-family: 'Inter', sans-serif; }
             .font-display { font-family: 'Montserrat', sans-serif; }
         </style>
