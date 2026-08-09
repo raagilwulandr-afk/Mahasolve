@@ -1,2 +1,4 @@
-// Mahasolve Application Script
-console.log('Mahasolve initialized.');
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+Alpine.start();

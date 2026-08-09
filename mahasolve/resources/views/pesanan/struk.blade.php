@@ -6,7 +6,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
     <style> body { font-family: 'Inter', sans-serif; } .font-display { font-family: 'Montserrat', sans-serif; } </style>
 </head>
 <body class="bg-[#F7F8FC] text-[#16182B] min-h-screen py-10 print:py-0 print:bg-white">
