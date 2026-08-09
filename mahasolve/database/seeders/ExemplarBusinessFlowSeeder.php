@@ -31,7 +31,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         $ragil = User::create([
             'email' => 'ragil.10124707@mahasiswa.unikom.ac.id',
             'username' => 'aphroditekenny',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('12345678'),
             'no_hp' => '081247071012',
             'role' => 'mahasiswa',
         ]);
@@ -40,7 +40,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         $rizki = User::create([
             'email' => 'rizki.maulana@gmail.com',
             'username' => 'rizki_maulana',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('12345678'),
             'no_hp' => '081234567890',
             'role' => 'provider',
         ]);
