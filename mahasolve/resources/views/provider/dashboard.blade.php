@@ -78,12 +78,12 @@
                                 <option value="Bank Mandiri">Bank Mandiri</option>
                             </select>
                             <div class="flex items-center justify-center gap-3 pt-3">
-                                <img src="{{ asset('images/gopay.png') }}" alt="GoPay" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                <img src="{{ asset('images/ovo.png') }}" alt="OVO" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                <img src="{{ asset('images/dana.png') }}" alt="DANA" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                <img src="{{ asset('images/shopeepay.png') }}" alt="ShopeePay" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                <img src="{{ asset('images/bca.png') }}" alt="BCA" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                <img src="{{ asset('images/mandiri.png') }}" alt="Mandiri" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/gopay.png') }}" alt="GoPay" loading="lazy" width="60" height="16" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/ovo.png') }}" alt="OVO" loading="lazy" width="60" height="16" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/dana.png') }}" alt="DANA" loading="lazy" width="60" height="16" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/shopeepay.png') }}" alt="ShopeePay" loading="lazy" width="60" height="16" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/bca.png') }}" alt="BCA" loading="lazy" width="60" height="16" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/mandiri.png') }}" alt="Mandiri" loading="lazy" width="60" height="16" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
                             </div>
                         </div>
 
