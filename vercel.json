@@ -1,6 +1,7 @@
 {
   "version": 2,
   "outputDirectory": "mahasolve/public",
+  "regions": ["sin1"],
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
@@ -42,7 +43,7 @@
     "LOG_LEVEL": "info",
     "DB_CONNECTION": "pgsql",
     "DB_HOST": "aws-0-ap-southeast-1.pooler.supabase.com",
-    "DB_PORT": "5432",
+    "DB_PORT": "6543",
     "DB_DATABASE": "postgres",
     "DB_USERNAME": "postgres.mbqpxgbfjrexjmvfypip",
     "DB_PASSWORD": "cDt1DoEy8WZN5XKN",
