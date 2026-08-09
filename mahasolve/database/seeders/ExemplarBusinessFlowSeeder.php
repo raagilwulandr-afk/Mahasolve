@@ -36,10 +36,10 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'role' => 'mahasiswa',
         ]);
 
-        // Akun 2: Rizki Maulana (rizki.maulana)
-        $rizki = User::create([
-            'email' => 'rizki.maulana@gmail.com',
-            'username' => 'rizki_maulana',
+        // Akun 2: Rizky Maulana (rizky.maulana)
+        $rizky = User::create([
+            'email' => 'rizky.maulana@gmail.com',
+            'username' => 'rizky_maulana',
             'password' => Hash::make('12345678'),
             'no_hp' => '081234567890',
             'role' => 'provider',
@@ -49,9 +49,9 @@ class ExemplarBusinessFlowSeeder extends Seeder
         // 2. PROFIL MITRA PROVIDER TERVERIFIKASI
         // ==========================================
 
-        // Profil Provider Rizki Maulana
-        $providerRizki = Provider::create([
-            'id_user' => $rizki->id_user,
+        // Profil Provider Rizky Maulana
+        $providerRizky = Provider::create([
+            'id_user' => $rizky->id_user,
             'rating' => 5.0,
             'detail_provider' => 'Mitra Penyedia Jasa Utama Mahasolve — Bimbingan Academic Coding, Print Skripsi, Antar Jemput & Titip Beli Unikom',
             'status_verifikasi' => 'terverifikasi',
@@ -73,9 +73,9 @@ class ExemplarBusinessFlowSeeder extends Seeder
         // 3. KATALOG LAYANAN (DITAWARKAN OLEH MITRA)
         // ==========================================
 
-        // Layanan oleh Provider Rizki
+        // Layanan oleh Provider Rizky
         $layananBimbingan = Layanan::create([
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'nama_layanan' => 'Bimbingan & Tutor Tugas RPL Unikom',
             'kategori' => 'Bimbingan',
             'deskripsi' => 'Bimbingan praktikum pemrograman Laravel 11, Clean Architecture, dan persiapan sidang komprehensif.',
@@ -84,7 +84,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         ]);
 
         $layananPrint = Layanan::create([
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'nama_layanan' => 'Jasa Print & Jilid Hardcover Skripsi Unikom',
             'kategori' => 'Print & Fotokopi',
             'deskripsi' => 'Cetak tugas akhir/skripsi warna HVS 80gr dan jilid hardcover pita emas sesuai standar Unikom.',
@@ -93,7 +93,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         ]);
 
         $layananAntar = Layanan::create([
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'nama_layanan' => 'Antar Jemput Motor Kampus Dipatiukur',
             'kategori' => 'Antar Jemput',
             'deskripsi' => 'Antar jemput cepat & aman helm bersih area Dipatiukur, Dago, & Sekitar Kampus Unikom.',
@@ -102,7 +102,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         ]);
 
         $layananTitip = Layanan::create([
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'nama_layanan' => 'Titip Beli Makanan Kantin & Minimarket',
             'kategori' => 'Titip Beli',
             'deskripsi' => 'Layanan titip beli makanan kantin kampus, alat tulis perkuliahan, dan kebutuhan kosan.',
@@ -130,7 +130,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         ]);
 
         // ==========================================
-        // 4. SKENARIO BUSINESS FLOW 1: PESANAN SELESAI + ULASAN (Ragil = Klien, Rizki = Provider)
+        // 4. SKENARIO BUSINESS FLOW 1: PESANAN SELESAI + ULASAN (Ragil = Klien, Rizky = Provider)
         // ==========================================
 
         $req1 = RequestLayanan::create([
@@ -143,7 +143,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
 
         $nego1 = Negosiasi::create([
             'id_request' => $req1->id_request,
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'harga_tawaran' => 45000,
             'dibuat_oleh' => 'provider',
             'detail_negosiasi' => 'Bisa dibimbing langsung di Perpustakaan Unikom Lantai 3',
@@ -154,13 +154,13 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'id_negosiasi' => $nego1->id_negosiasi,
             'id_pengirim' => $ragil->id_user,
             'peran_pengirim' => 'mahasiswa',
-            'pesan' => 'Halo Mas Rizki, mau minta bimbingan Clean Architecture Laravel 11 dong.',
+            'pesan' => 'Halo Mas Rizky, mau minta bimbingan Clean Architecture Laravel 11 dong.',
             'harga_tawaran' => 50000,
         ]);
 
         PesanNegosiasi::create([
             'id_negosiasi' => $nego1->id_negosiasi,
-            'id_pengirim' => $rizki->id_user,
+            'id_pengirim' => $rizky->id_user,
             'peran_pengirim' => 'provider',
             'pesan' => 'Bisa dibimbing langsung di Perpustakaan Unikom Lantai 3. Saya kasih penawaran Rp45.000 ya.',
             'harga_tawaran' => 45000,
@@ -187,13 +187,13 @@ class ExemplarBusinessFlowSeeder extends Seeder
         RatingReview::create([
             'id_pesanan' => $pesanan1->id_pesanan,
             'rate' => 5,
-            'review' => 'Penjelasan Mas Rizki sangat jelas, sabar, dan membantu tugas akhir saya rilis tepat waktu!',
+            'review' => 'Penjelasan Mas Rizky sangat jelas, sabar, dan membantu tugas akhir saya rilis tepat waktu!',
         ]);
 
-        $providerRizki->refreshRating();
+        $providerRizky->refreshRating();
 
         // ==========================================
-        // 5. SKENARIO BUSINESS FLOW 2: PESANAN SEDANG DIPROSES (Ragil = Klien, Rizki = Provider)
+        // 5. SKENARIO BUSINESS FLOW 2: PESANAN SEDANG DIPROSES (Ragil = Klien, Rizky = Provider)
         // ==========================================
 
         $reqPrint = RequestLayanan::create([
@@ -206,7 +206,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
 
         $negoPrint = Negosiasi::create([
             'id_request' => $reqPrint->id_request,
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'harga_tawaran' => 35000,
             'dibuat_oleh' => 'provider',
             'detail_negosiasi' => 'Siap diprint HVS 80gr jilid pita emas',
@@ -217,13 +217,13 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'id_negosiasi' => $negoPrint->id_negosiasi,
             'id_pengirim' => $ragil->id_user,
             'peran_pengirim' => 'mahasiswa',
-            'pesan' => 'Mas Rizki, tolong printkan berkas skripsi saya 50 lembar ya.',
+            'pesan' => 'Mas Rizky, tolong printkan berkas skripsi saya 50 lembar ya.',
             'harga_tawaran' => 35000,
         ]);
 
         PesanNegosiasi::create([
             'id_negosiasi' => $negoPrint->id_negosiasi,
-            'id_pengirim' => $rizki->id_user,
+            'id_pengirim' => $rizky->id_user,
             'peran_pengirim' => 'provider',
             'pesan' => 'Siap diprint HVS 80gr jilid pita emas. Penawaran disetujui.',
             'harga_tawaran' => 35000,
@@ -248,7 +248,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
         ]);
 
         // ==========================================
-        // 6. SKENARIO BUSINESS FLOW 3: NEGOSIASI AKTIF (Ragil = Klien, Rizki = Provider)
+        // 6. SKENARIO BUSINESS FLOW 3: NEGOSIASI AKTIF (Ragil = Klien, Rizky = Provider)
         // ==========================================
 
         $req2 = RequestLayanan::create([
@@ -261,7 +261,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
 
         $nego2 = Negosiasi::create([
             'id_request' => $req2->id_request,
-            'id_provider' => $providerRizki->id_provider,
+            'id_provider' => $providerRizky->id_provider,
             'harga_tawaran' => 28000,
             'dibuat_oleh' => 'provider',
             'detail_negosiasi' => 'Bisa dibelikan sekaligus antar ke Ruang 4.02 Kampus Unikom',
@@ -272,24 +272,24 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'id_negosiasi' => $nego2->id_negosiasi,
             'id_pengirim' => $ragil->id_user,
             'peran_pengirim' => 'mahasiswa',
-            'pesan' => 'Mas Rizki, bisa tolong belikan Ayam Geprek 2 porsi?',
+            'pesan' => 'Mas Rizky, bisa tolong belikan Ayam Geprek 2 porsi?',
             'harga_tawaran' => 30000,
         ]);
 
         PesanNegosiasi::create([
             'id_negosiasi' => $nego2->id_negosiasi,
-            'id_pengirim' => $rizki->id_user,
+            'id_pengirim' => $rizky->id_user,
             'peran_pengirim' => 'provider',
             'pesan' => 'Bisa dibelikan sekaligus antar ke Ruang 4.02 Kampus Unikom. Saya tawar Rp28.000 ya.',
             'harga_tawaran' => 28000,
         ]);
 
         // ==========================================
-        // 7. SKENARIO BUSINESS FLOW 4: PESANAN REVERSE (Rizki = Klien, Ragil = Provider)
+        // 7. SKENARIO BUSINESS FLOW 4: PESANAN REVERSE (Rizky = Klien, Ragil = Provider)
         // ==========================================
 
         $reqPPT = RequestLayanan::create([
-            'id_user' => $rizki->id_user,
+            'id_user' => $rizky->id_user,
             'kategori' => 'Bimbingan',
             'detail_kebutuhan' => 'Desain Slide Presentasi PPT Sidang Komprehensif Skripsi',
             'harga_awal' => 30000,
@@ -307,7 +307,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
 
         PesanNegosiasi::create([
             'id_negosiasi' => $negoPPT->id_negosiasi,
-            'id_pengirim' => $rizki->id_user,
+            'id_pengirim' => $rizky->id_user,
             'peran_pengirim' => 'mahasiswa',
             'pesan' => 'Mas Ragil, minta bantuan bikin slide presentasi PPT sidang skripsi ya.',
             'harga_tawaran' => 30000,
@@ -317,7 +317,7 @@ class ExemplarBusinessFlowSeeder extends Seeder
             'id_negosiasi' => $negoPPT->id_negosiasi,
             'id_pengirim' => $ragil->id_user,
             'peran_pengirim' => 'provider',
-            'pesan' => 'Siap Mas Rizki, slide akan didesain animasi modern profesional.',
+            'pesan' => 'Siap Mas Rizky, slide akan didesain animasi modern profesional.',
             'harga_tawaran' => 30000,
         ]);
 
