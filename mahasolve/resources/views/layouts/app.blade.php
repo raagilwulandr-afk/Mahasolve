@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mahasolve — Solusi Mobilitas & Akademik Mahasiswa Unikom')</title>
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,6 +16,8 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .font-display { font-family: 'Montserrat', sans-serif; }
+        .page-fade-enter { opacity: 0; transform: translateY(4px); transition: opacity 0.15s ease-out, transform 0.15s ease-out; }
+        .page-fade-enter-active { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body class="bg-[#F7F8FC] text-[#16182B] antialiased min-h-screen flex flex-col justify-between" x-data="{ openMobileMenu: false }">
@@ -387,6 +392,7 @@
         </div>
     </footer>
 
-    {{-- SPA INSTANT 0MS PAGE NAVIGATOR & TOP PROGRESS BAR --}}
+    {{-- SPA INSTANT 0MS PAGE NAVIGATOR & PREFETCH ENGINE --}}
+    <script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.js" type="module"></script>
 </body>
 </html>
