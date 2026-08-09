@@ -16,8 +16,8 @@
       "dest": "/mahasolve/public/$1"
     },
     {
-      "src": "/favicon.ico",
-      "dest": "/mahasolve/public/favicon.ico"
+      "src": "/(favicon.ico|favicon.svg)",
+      "dest": "/mahasolve/public/$1"
     },
     {
       "src": "/robots.txt",

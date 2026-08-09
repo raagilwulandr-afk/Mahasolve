@@ -22,6 +22,12 @@ Route::get('/favicon.ico', function () {
         'Cache-Control' => 'public, max-age=31536000',
     ]);
 });
+Route::get('/favicon.svg', function () {
+    return response()->file(public_path('favicon.svg'), [
+        'Content-Type' => 'image/svg+xml',
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+});
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // --- PROFILE ROUTES ---
