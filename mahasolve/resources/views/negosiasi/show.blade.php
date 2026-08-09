@@ -200,8 +200,8 @@
                     }
                 </script>
             @endif
-        <!-- MODERN CUSTOM GLASSMORPHISM REJECT CONFIRMATION MODAL -->
-        <template x-teleport="body">
+        
+            <!-- MODERN CUSTOM GLASSMORPHISM REJECT CONFIRMATION MODAL -->
             <div x-show="showRejectModal"
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0"
@@ -251,6 +251,6 @@
                     </div>
                 </div>
             </div>
-        </template>
+        </div>
     </div>
 @endsection

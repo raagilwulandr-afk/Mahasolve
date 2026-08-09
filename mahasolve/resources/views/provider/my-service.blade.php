@@ -182,174 +182,169 @@
     </div>
 
     <!-- MODAL FORM TAMBAH LAYANAN -->
-    <template x-teleport="body">
-        <div x-show="openModal"
-            class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-6 overflow-y-auto"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            style="display: none;">
+    <div x-show="openModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-6 overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        style="display: none;">
 
-            <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl shadow-indigo-950/20 border border-slate-100 relative my-auto max-h-[85vh] overflow-y-auto" @click.away="openModal = false">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100 sticky top-0 bg-white z-10">
-                    <div class="flex items-center gap-3">
-                        <span class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </span>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-base font-display">Tambah Layanan Baru</h3>
-                            <p class="text-[11px] text-slate-400">Tampilkan penawaran jasa kamu di katalog Unikom.</p>
-                        </div>
-                    </div>
-                    <button type="button" @click="openModal = false" class="text-slate-400 hover:text-slate-700 p-2 rounded-2xl hover:bg-slate-100 transition cursor-pointer">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl shadow-indigo-950/20 border border-slate-100 relative my-auto max-h-[85vh] overflow-y-auto" @click.away="openModal = false">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100 sticky top-0 bg-white z-10">
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                    </button>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base font-display">Tambah Layanan Baru</h3>
+                        <p class="text-[11px] text-slate-400">Tampilkan penawaran jasa kamu di katalog Unikom.</p>
+                    </div>
                 </div>
-
-                <form action="{{ route('provider.services.store') }}" method="POST" class="space-y-4">
-                    @csrf
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Layanan</label>
-                        <input type="text" name="nama_layanan" required placeholder="Contoh: Desain PPT Sidang Aesthetic & Rapi"
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Resmi Mahasolve</label>
-                        <select name="kategori" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
-                            <option value="Antar Jemput">Antar Jemput</option>
-                            <option value="Print & Fotokopi">Print & Fotokopi</option>
-                            <option value="Bimbingan">Bimbingan</option>
-                            <option value="Desain & Editing" selected>Desain & Editing</option>
-                            <option value="Titip Makan">Titip Makan</option>
-                            <option value="Titip Beli">Titip Beli</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Harga Pas (Rp)</label>
-                            <input type="number" name="harga" required placeholder="45000"
-                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Estimasi Pengerjaan</label>
-                            <input type="text" name="estimasi_pengerjaan" placeholder="Contoh: 1-2 hari kerja" value="1 hari"
-                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Layanan</label>
-                        <textarea name="deskripsi" rows="3" placeholder="Jelaskan detail cakupan jasa yang kamu tawarkan..."
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition"></textarea>
-                    </div>
-
-                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                        <button type="button" @click="openModal = false"
-                            class="px-5 py-2.5 border border-slate-200 text-slate-600 text-xs font-bold rounded-2xl hover:bg-slate-50 transition text-center cursor-pointer">Batal</button>
-                        <button type="submit"
-                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-2xl shadow-md shadow-indigo-500/20 transition text-center cursor-pointer">Publikasikan Layanan</button>
-                    </div>
-                </form>
+                <button type="button" @click="openModal = false" class="text-slate-400 hover:text-slate-700 p-2 rounded-2xl hover:bg-slate-100 transition cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-        </div>
-    </template>
 
-    <!-- MODAL FORM EDIT LAYANAN -->
-    <template x-teleport="body">
-        <div x-show="openEditModal"
-            class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-6 overflow-y-auto"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            style="display: none;">
-
-            <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl shadow-indigo-950/20 border border-slate-100 relative my-auto max-h-[85vh] overflow-y-auto" @click.away="openEditModal = false">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100 sticky top-0 bg-white z-10">
-                    <div class="flex items-center gap-3">
-                        <span class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                        </span>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-base font-display">Edit Layanan</h3>
-                            <p class="text-[11px] text-slate-400">Perbarui rincian tarif atau deskripsi layanan kamu.</p>
-                        </div>
-                    </div>
-                    <button type="button" @click="openEditModal = false" class="text-slate-400 hover:text-slate-700 p-2 rounded-2xl hover:bg-slate-100 transition cursor-pointer">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
+            <form action="{{ route('provider.services.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Layanan</label>
+                    <input type="text" name="nama_layanan" required placeholder="Contoh: Desain PPT Sidang Aesthetic & Rapi"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
                 </div>
 
-                <form :action="'{{ url('/my-service') }}/' + editItem.id" method="POST" class="space-y-4">
-                    @csrf
-                    @method('PUT')
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Layanan</label>
-                        <input type="text" name="nama_layanan" x-model="editItem.nama" required
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Resmi Mahasolve</label>
+                    <select name="kategori" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
+                        <option value="Antar Jemput">Antar Jemput</option>
+                        <option value="Print & Fotokopi">Print & Fotokopi</option>
+                        <option value="Bimbingan">Bimbingan</option>
+                        <option value="Desain & Editing" selected>Desain & Editing</option>
+                        <option value="Titip Makan">Titip Makan</option>
+                        <option value="Titip Beli">Titip Beli</option>
+                    </select>
+                </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Resmi Mahasolve</label>
-                        <select name="kategori" x-model="editItem.kategori" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
-                            <option value="Antar Jemput">Antar Jemput</option>
-                            <option value="Print &amp; Fotokopi">Print &amp; Fotokopi</option>
-                            <option value="Bimbingan">Bimbingan</option>
-                            <option value="Desain &amp; Editing">Desain &amp; Editing</option>
-                            <option value="Titip Makan">Titip Makan</option>
-                            <option value="Titip Beli">Titip Beli</option>
-                        </select>
-                    </div>
-
+                <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Harga Pas (Rp)</label>
-                        <input type="number" name="harga" x-model="editItem.harga" required
+                        <input type="number" name="harga" required placeholder="45000"
                             class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
                     </div>
-
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Layanan</label>
-                        <textarea name="deskripsi" x-model="editItem.deskripsi" rows="3"
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition"></textarea>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Estimasi Pengerjaan</label>
+                        <input type="text" name="estimasi_pengerjaan" placeholder="Contoh: 1-2 hari kerja" value="1 hari"
+                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
                     </div>
+                </div>
 
-                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                        <button type="button" @click="openEditModal = false"
-                            class="px-5 py-2.5 border border-slate-200 text-slate-600 text-xs font-bold rounded-2xl hover:bg-slate-50 transition text-center cursor-pointer">Batal</button>
-                        <button type="submit"
-                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-2xl shadow-md shadow-indigo-500/20 transition text-center cursor-pointer">Simpan Perubahan</button>
-                    </div>
-                </form>
-            </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Layanan</label>
+                    <textarea name="deskripsi" rows="3" placeholder="Jelaskan detail cakupan jasa yang kamu tawarkan..."
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" @click="openModal = false"
+                        class="px-5 py-2.5 border border-slate-200 text-slate-600 text-xs font-bold rounded-2xl hover:bg-slate-50 transition text-center cursor-pointer">Batal</button>
+                    <button type="submit"
+                        class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-2xl shadow-md shadow-indigo-500/20 transition text-center cursor-pointer">Publikasikan Layanan</button>
+                </div>
+            </form>
         </div>
-    </template>
+    </div>
+
+    <!-- MODAL FORM EDIT LAYANAN -->
+    <div x-show="openEditModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-6 overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        style="display: none;">
+
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl shadow-indigo-950/20 border border-slate-100 relative my-auto max-h-[85vh] overflow-y-auto" @click.away="openEditModal = false">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100 sticky top-0 bg-white z-10">
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base font-display">Edit Layanan</h3>
+                        <p class="text-[11px] text-slate-400">Perbarui rincian tarif atau deskripsi layanan kamu.</p>
+                    </div>
+                </div>
+                <button type="button" @click="openEditModal = false" class="text-slate-400 hover:text-slate-700 p-2 rounded-2xl hover:bg-slate-100 transition cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form :action="'{{ url('/my-service') }}/' + editItem.id" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Layanan</label>
+                    <input type="text" name="nama_layanan" x-model="editItem.nama" required
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Resmi Mahasolve</label>
+                    <select name="kategori" x-model="editItem.kategori" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
+                        <option value="Antar Jemput">Antar Jemput</option>
+                        <option value="Print &amp; Fotokopi">Print &amp; Fotokopi</option>
+                        <option value="Bimbingan">Bimbingan</option>
+                        <option value="Desain &amp; Editing">Desain &amp; Editing</option>
+                        <option value="Titip Makan">Titip Makan</option>
+                        <option value="Titip Beli">Titip Beli</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Harga Pas (Rp)</label>
+                    <input type="number" name="harga" x-model="editItem.harga" required
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Layanan</label>
+                    <textarea name="deskripsi" x-model="editItem.deskripsi" rows="3"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-medium focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" @click="openEditModal = false"
+                        class="px-5 py-2.5 border border-slate-200 text-slate-600 text-xs font-bold rounded-2xl hover:bg-slate-50 transition text-center cursor-pointer">Batal</button>
+                    <button type="submit"
+                        class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-2xl shadow-md shadow-indigo-500/20 transition text-center cursor-pointer">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- MODAL CONFIRMATION HAPUS LAYANAN -->
-    <template x-teleport="body">
-        <div x-show="openDeleteModal"
-            class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-6"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            style="display: none;">
+    <div x-show="openDeleteModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-6"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        style="display: none;">
 
             <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl shadow-indigo-950/20 relative text-center space-y-4 border border-slate-100" @click.away="openDeleteModal = false">
                 <div class="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-rose-100">
@@ -377,7 +372,6 @@
                 </form>
             </div>
         </div>
-    </template>
 
 </div>
 

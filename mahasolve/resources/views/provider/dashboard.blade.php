@@ -51,68 +51,66 @@
             </div>
 
             {{-- MODAL CAIRKAN SALDO --}}
-            <template x-teleport="body">
-                <div x-show="showWithdrawModal" x-transition class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4" style="display:none;">
-                    <div @click.away="showWithdrawModal = false" class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 text-left">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div>
-                                <h3 class="font-display font-extrabold text-base text-slate-900">Penarikan Saldo Pendapatan</h3>
-                                <p class="text-xs text-slate-500 mt-0.5">Transfer saldo pendapatan mitra ke E-Wallet atau Rekening Bank.</p>
+            <div x-show="showWithdrawModal" x-transition class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4" style="display:none;">
+                <div @click.away="showWithdrawModal = false" class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 text-left">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="font-display font-extrabold text-base text-slate-900">Penarikan Saldo Pendapatan</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Transfer saldo pendapatan mitra ke E-Wallet atau Rekening Bank.</p>
+                        </div>
+                        <button type="button" @click="showWithdrawModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-100 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <form method="POST" action="{{ route('provider.withdraw') }}" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tujuan Pencairan (E-Wallet / Bank)</label>
+                            <select name="metode" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
+                                <option value="GoPay">GoPay</option>
+                                <option value="OVO">OVO</option>
+                                <option value="DANA">DANA</option>
+                                <option value="ShopeePay">ShopeePay</option>
+                                <option value="Bank BCA">Bank BCA</option>
+                                <option value="Bank Mandiri">Bank Mandiri</option>
+                            </select>
+                            <div class="flex items-center justify-center gap-3 pt-3">
+                                <img src="{{ asset('images/gopay.png') }}" alt="GoPay" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/ovo.png') }}" alt="OVO" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/dana.png') }}" alt="DANA" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/shopeepay.png') }}" alt="ShopeePay" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/bca.png') }}" alt="BCA" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
+                                <img src="{{ asset('images/mandiri.png') }}" alt="Mandiri" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
                             </div>
-                            <button type="button" @click="showWithdrawModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-100 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
                         </div>
 
-                        <form method="POST" action="{{ route('provider.withdraw') }}" class="space-y-4">
-                            @csrf
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Tujuan Pencairan (E-Wallet / Bank)</label>
-                                <select name="metode" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
-                                    <option value="GoPay">GoPay</option>
-                                    <option value="OVO">OVO</option>
-                                    <option value="DANA">DANA</option>
-                                    <option value="ShopeePay">ShopeePay</option>
-                                    <option value="Bank BCA">Bank BCA</option>
-                                    <option value="Bank Mandiri">Bank Mandiri</option>
-                                </select>
-                                <div class="flex items-center justify-center gap-3 pt-3">
-                                    <img src="{{ asset('images/gopay.png') }}" alt="GoPay" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                    <img src="{{ asset('images/ovo.png') }}" alt="OVO" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                    <img src="{{ asset('images/dana.png') }}" alt="DANA" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                    <img src="{{ asset('images/shopeepay.png') }}" alt="ShopeePay" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                    <img src="{{ asset('images/bca.png') }}" alt="BCA" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                    <img src="{{ asset('images/mandiri.png') }}" alt="Mandiri" class="h-4 object-contain opacity-90 hover:opacity-100 transition">
-                                </div>
-                            </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Nomor Rekening / No HP E-Wallet</label>
+                            <input type="text" name="no_rekening" placeholder="Contoh: 081234567890 / 8930129381" required
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
+                        </div>
 
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Nomor Rekening / No HP E-Wallet</label>
-                                <input type="text" name="no_rekening" placeholder="Contoh: 081234567890 / 8930129381" required
-                                       class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
-                            </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Jumlah Penarikan (Rp)</label>
+                            <input type="number" name="jumlah" value="{{ max(10000, $totalPendapatan ?? 0) }}" min="10000" max="{{ max(10000, $totalPendapatan ?? 0) }}" required
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
+                            <p class="text-[10px] text-slate-400 mt-1">Minimal penarikan Rp10.000 (Bebas biaya admin).</p>
+                        </div>
 
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Jumlah Penarikan (Rp)</label>
-                                <input type="number" name="jumlah" value="{{ max(10000, $totalPendapatan ?? 0) }}" min="10000" max="{{ max(10000, $totalPendapatan ?? 0) }}" required
-                                       class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
-                                <p class="text-[10px] text-slate-400 mt-1">Minimal penarikan Rp10.000 (Bebas biaya admin).</p>
-                            </div>
-
-                            <div class="flex items-center gap-3 pt-2">
-                                <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-500/20 transition cursor-pointer">
-                                    Konfirmasi Penarikan Saldo
-                                </button>
-                                <button type="button" @click="showWithdrawModal = false" class="px-4 py-3 border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs rounded-xl transition">
-                                    Batal
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="flex items-center gap-3 pt-2">
+                            <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-500/20 transition cursor-pointer">
+                                Konfirmasi Penarikan Saldo
+                            </button>
+                            <button type="button" @click="showWithdrawModal = false" class="px-4 py-3 border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs rounded-xl transition">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </template>
+            </div>
         </div>
 
         <!-- Card 2: Pesanan Aktif -->
