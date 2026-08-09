@@ -10,7 +10,7 @@
 
 <div {{ $attributes->merge(['class' => "p-4 rounded-2xl border flex items-start gap-3 shadow-sm {$style}"]) }}>
     <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 1 1 -18 0 9 9 0 0 1 18 0z"/>
     </svg>
     <div>
         <p class="text-xs font-bold font-display uppercase tracking-wider">{{ $type === 'error' ? 'Terjadi Kesalahan' : 'Pemberitahuan' }}</p>

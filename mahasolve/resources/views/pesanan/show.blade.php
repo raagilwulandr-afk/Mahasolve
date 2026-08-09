@@ -267,7 +267,7 @@
             <div class="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-4">
                 <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
                     <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 0 0118 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 1 1 -18 0 9 9 0 0 1 18 0z"/>
                     </svg>
                     Log Riwayat Progress Pengerjaan
                 </h2>

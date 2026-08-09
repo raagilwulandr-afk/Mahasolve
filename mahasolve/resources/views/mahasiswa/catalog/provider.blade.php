@@ -30,7 +30,7 @@
                         <h1 class="text-2xl font-extrabold font-display leading-tight">@ {{ $provider->user->username }}</h1>
                         <span class="px-3 py-0.5 bg-emerald-500/20 backdrop-blur-md text-emerald-200 border border-emerald-400/30 text-[10px] font-extrabold rounded-full uppercase tracking-wider flex items-center gap-1">
                             <svg class="w-3 h-3 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 1 1 -18 0 9 9 0 0 1 18 0z"/>
                             </svg>
                             Mitra Terverifikasi
                         </span>

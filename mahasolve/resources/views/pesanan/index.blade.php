@@ -99,7 +99,7 @@
                     <div class="p-6 space-y-6">
                         <div class="bg-amber-50/60 border border-amber-200/70 rounded-2xl p-4 flex items-start gap-3">
                             <svg class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 1 1 -18 0 9 9 0 0 1 18 0z"/>
                             </svg>
                             <div class="text-xs text-amber-900 leading-relaxed">
                                 <p class="font-bold">Diskusi Penawaran Harga</p>
